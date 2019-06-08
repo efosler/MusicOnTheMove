@@ -1,0 +1,222 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Music on the Move: Korean Population of the United States</title>
+
+    <style type="text/css">
+        html { height: 100% }
+        body { height: 100%; margin: 0; padding: 0 }
+        #map-canvas { height: 100% }
+        
+        path:hover {opacity: 1} 
+        .d3-tip {   
+            line-height: 1;
+            font-weight: bold;
+            padding: 12px;
+             background: rgba(0, 0, 0, 0.8);
+             color: #fff;
+            border-radius: 2px;
+            max-width: 300px;
+            z-index: 1000;
+        }
+
+        /* Creates a small triangle extender for the tooltip */
+        .d3-tip:after {
+            box-sizing: border-box;
+            display: inline;
+            font-size: 10px;
+            width: 100%;
+            line-height: 1;
+            color: rgba(0, 0, 0, 0.8);
+            content: "\25BC";
+            position: absolute;
+            text-align: center;
+        }
+
+        /* Style northward tooltips differently */
+        .d3-tip.n:after {
+            margin: -1px 0 0 0;
+            top: 100%;
+            left: 0;
+        }
+
+        .legend {
+            line-height: 18px;
+            color: #555;
+        }
+        .legend i {
+            width: 18px;
+            height: 18px;
+            float: left;
+            margin-right: 8px;
+            opacity: 0.7;
+        }
+
+        .box {
+            border: 1px solid #EEE;
+            margin: 3px;
+            padding: 5px;
+            background-color: white;
+            font-family: sans-serif;
+            font-size: 12px;
+        }
+        .title {
+            font-weight: 600;
+        }
+        .source {
+            position: absolute;
+            width: 50%;
+            top: 6px;
+            left: 50px;
+            z-index: 999;
+        }
+    </style>
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.5.1/dist/leaflet.css"
+        integrity="sha512-xwE/Az9zrjBIphAcBb3F6JVqxf46+CDLwfLMHloNu6KEQCAWi6HcDUbeOfBIptF7tcCzusKFjFw2yuvEpDL9wQ=="
+        crossorigin=""/>   
+    <style type="text/css">
+        /* correct for an incompatibility between leaflet and svg - lets hover events pass through correctly */
+        .leaflet-pane > svg path { pointer-events: auto; }
+    </style>
+
+    <meta http-equiv="X-UA-Compatible" content="IE=Edge">
+
+</head>
+<body>
+  <div id="map-canvas"></div>
+  <div class="source box">
+    <div class="title">Music on the Move: Korean Population of the United States</div>
+    This map, based on an <a href="http://thedailyviz.com/2018/01/23/mapping-the-united-states-korean-population/">original map by Matt Stiles in the Daily Viz</a>, 
+    illustrates the percentage of people in each county who identified themselves as Korean in the 2010 US Census. Overall, 1.7 million people in the United States claimed Korean identity.
+  </div>
+
+   
+    <script src="https://unpkg.com/leaflet@1.5.1/dist/leaflet.js"
+        integrity="sha512-GffPMF3RvMeYyc1LWMHtK8EbPv0iNZ8/oTtHPx9/cc2ILxQ+u905qIwdpULaqDkyBKgOaB57QTMg7ztg8Jm2Og=="
+        crossorigin=""></script>
+
+    <script src="http://d3js.org/d3.v5.min.js"></script>
+    <script src="d3-tip.js"></script>
+    <script src="L.D3SvgOverlay.min.js"></script>
+<script>
+
+var map = L.map("map-canvas", {center: [37.5,-95], zoom: 5});
+var tiles = L.tileLayer('geography-gray-basemap/{z}/{x}/{y}.png', {
+    tms: true, 
+    attribution: 'Data from US Census | '+  
+            '<a href="http://thedailyviz.com/2018/01/23/mapping-the-united-states-korean-population/">Original map Matt Styles/Daily Viz</a> used by permission <a href="https://github.com/stiles/graphics/tree/master/koreans-in-usa-counties-choropleth-20180116">(source)</a> | '+
+            'Map tiles by E. Fosler-Lussier, made with <a href="https://www.naturalearthdata.com">Natural Earth</a>.'});
+tiles.addTo(map);
+
+// set up a scale in the legend
+var scale=[0.2, 0.5, 1.5, 2.5, 7];
+var color = d3.scaleThreshold()
+        .domain(scale)
+        .range(['#C5DFDF', '#8BC0BF', '#51A09E', '#17807E', '#11605E', '#0B403F']);
+
+// initialize counties, states, tooltip as global variables
+var counties = [];
+var states = [];
+var tip;
+
+// this is a layer that when added to the map adds the state data as SVG overlays
+var statesOverlay = L.d3SvgOverlay(function(sel, proj) {
+    var upd = sel.selectAll('path').data(states);
+    upd.enter()
+        .append('path')
+        .attr('d',proj.pathFromGeojson)
+        .attr('stroke','white')
+        .attr('stroke-opacity','0.6')
+        .attr('fill','none')
+    upd.attr('stroke-width', 0.8 / proj.scale);
+});
+
+// this is a layer that when added to the map adds the county data as SVG overlays
+var countiesOverlay = L.d3SvgOverlay(function(sel, proj) {
+    // set up the tooltip
+    if (typeof tip != "undefined") { tip.hide(); }
+     tip = d3.tip()
+        .attr('class', 'd3-tip')
+        .html(function(d) {
+            // this function looks up the GEO_ID of the region in the saved percentage places and sets the tooltip HTML
+            var retstr;
+            if (d.properties.GEO_ID in pct) {
+                retstr = pct[d.properties.GEO_ID] + "% of people in "+place[d.properties.GEO_ID]+" are Korean.";
+            } else {
+                retstr = "Data for "+d.properties.NAME+" "+d.properties.LSAD+" are not available.";
+            }
+            return retstr; 
+        });
+    //add the tooltip to the SVG 
+    sel.call(tip);
+    
+    // now add the county path boundaries, and look up the color in the thresholding
+    var upd = sel.selectAll('path').data(counties);
+    upd.enter()
+        .append('path')
+        .attr('d', proj.pathFromGeojson)
+        .attr('stroke', 'black')
+        .attr('fill', function(d){ 
+            var v=0;
+            if (d.properties.GEO_ID in pct) {
+                v=pct[d.properties.GEO_ID];
+            }
+            return color(v);  
+        })
+        .attr('fill-opacity', '0.9')
+        .attr('stroke-opacity', '0.3')
+        .on('mouseover', tip.show) 
+        .on('mouseout', tip.hide)
+        .attr('stroke-width', 0.25 / proj.scale); 
+});
+
+// This section reads in the data and saves it to associative arrays for easy lookup
+
+// Initialize arrays
+var pct={};
+var place={};
+
+// gz_2010_us_050_00_5m.json: county-level GeoJSON data
+// koreanscounties.json: county-level JSON stats of korean population
+// gz_2010_us_040_00_5m.json: state-level GeoJSON data
+d3.json("gz_2010_us_050_00_5m.json").then(function(data) {
+    d3.json("koreanscounties.json").then(function(pcts) {
+        d3.json("gz_2010_us_040_00_5m.json").then(function(statedata) {
+            pcts.objects.koreanscounties.geometries.forEach(function(item) {
+                id="0500000US" + item.properties.fips;
+                pct[id]=item.properties.koreanpct;
+                place[id]=item.properties.place;
+            }); 
+            counties=data.features;
+            states=statedata.features;
+            countiesOverlay.addTo(map);
+            statesOverlay.addTo(map);
+        });        
+    });
+});
+
+// add the legend control
+var legend = L.control({position: 'bottomright'});
+
+legend.onAdd = function (map) {
+
+    var div = L.DomUtil.create('div', 'info legend'),
+        grades = [0].concat(scale),
+        labels = [];
+
+    // loop through our density intervals and generate a label with a colored square for each interval
+    for (var i = 0; i < grades.length -1; i++) {
+        div.innerHTML +=
+            '<i style="background:' + color(grades[i] + 1) + '"></i> ' +
+            grades[i] + (grades[i + 1] ? '&ndash;' + grades[i + 1] + '%<br>' : '+');
+    }
+
+    return div;
+};
+
+legend.addTo(map);
+
+</script>
+    
+</body>
+</html>
