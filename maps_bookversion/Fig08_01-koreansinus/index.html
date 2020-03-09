@@ -1,0 +1,269 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Music on the Move: Korean Population of the United States</title>
+<!--
+Korean Population of the United States Map
+Original Map by Matt Stiles, the Daily Viz
+
+Adaptation by permission, CC-BY-NC 4.0
+Eric Fosler-Lussier, The Ohio State University
+for the book, "Music on the Move" by Danielle Fosler-Lussier, U. Michigan Press, 2020.
+
+This map, based on an original map by Matt Stiles in the Daily Viz, 
+illustrates the percentage of people in each county who identified themselves as Korean in the 2010 US Census. 
+Overall, 1.7 million people in the United States claimed Korean identity.
+http://thedailyviz.com/2018/01/23/mapping-the-united-states-korean-population
+
+Map tiles were created by Eric Fosler-Lussier from Natural Earth data and are available under a CC0 license to all.
+-->
+    <style type="text/css">
+        html { height: 100% }
+        body { height: 100%; margin: 0; padding: 0 }
+        #map-canvas { height: 100% }
+        .flagIcon { border: 0px }
+        .conflictCountry { font-weight: bold; text-decoration: underline }
+        .conflictDate {font-weight: bold;}
+        .conflictIntervener {font-style: italic}
+        path:hover {opacity: 1} 
+        .d3-tip {   
+            line-height: 1;
+            font-weight: bold;
+            padding: 12px;
+             background: rgba(0, 0, 0, 0.8);
+             color: #fff;
+            border-radius: 2px;
+            max-width: 300px;
+        }
+
+        /* Creates a small triangle extender for the tooltip */
+        .d3-tip:after {
+            box-sizing: border-box;
+            display: inline;
+            font-size: 10px;
+            width: 100%;
+            line-height: 1;
+            color: rgba(0, 0, 0, 0.8);
+            content: "\25BC";
+            position: absolute;
+            text-align: center;
+        }
+
+        /* Style northward tooltips differently */
+        .d3-tip.n:after {
+            margin: -1px 0 0 0;
+            top: 100%;
+            left: 0;
+        }
+
+        .legend {
+            line-height: 18px;
+            color: #555;
+        }
+        .legend i {
+            width: 18px;
+            height: 18px;
+            float: left;
+            margin-right: 8px;
+            opacity: 0.7;
+        }
+
+        .box {
+            border: 1px solid #EEE;
+            margin: 3px;
+            padding: 5px;
+            background-color: white;
+            font-family: sans-serif;
+            font-size: 12px;
+        }
+        .title {
+            font-weight: 600;
+        }
+        .source {
+            position: absolute;
+            width: 50%;
+            top: 6px;
+            left: 50px;
+        }
+        .loading {
+            position: absolute;
+            margin: auto;
+            width: 60px;
+            height: 20px;
+            text-align: center;
+            top: 0;
+            right: 0;
+            bottom: 0;
+            left: 0;
+            border-radius: 10px;
+            border: 1px solid #EEE;
+            padding: 5px;
+            background-color: white;
+            font-family: sans-serif;
+            font-size: 12px;
+            z-index: 1000;
+        }
+
+    </style>
+    <link href='leaflet.css' rel='stylesheet' type='text/css'/>
+    <meta http-equiv="X-UA-Compatible" content="IE=Edge">
+
+</head>
+<body>
+  <div id="map-canvas"></div>
+  <!-- removed for book
+  <div class="source box">
+    <div class="title">Music on the Move: Korean Population of the United States</div>
+    This map, based on an <a href="http://thedailyviz.com/2018/01/23/mapping-the-united-states-korean-population/">original map by Matt Stiles in the Daily Viz</a>, 
+    illustrates the percentage of people in each county who identified themselves as Korean in the 2010 US Census. Overall, 1.7 million people in the United States claimed Korean identity.
+  </div>
+  -->
+  <div id='loadingbox' class='loading'> Loading... </div>
+   
+  <script src="leaflet.js"></script>
+  <script src="d3.min.js"></script>
+  <script src="d3-tip.min.js"></script>
+  <script src="L.D3SvgOverlay.orig.min.js"></script>
+  <script src="jquery-1.9.1.min.js"></script>
+<script>
+
+var map = L.map("map-canvas", {center: [43.5,-101.6], zoom: 4, maxZoom: 6});
+map.fitBounds([[59,-59],[19,-144]])
+var tiles = L.tileLayer('geography-gray-basemap/{z}/{x}/{y}.png', {
+    tms: true, 
+    attribution: 'Data from US Census | '+  
+            '<a href="http://thedailyviz.com/2018/01/23/mapping-the-united-states-korean-population/">Original map Matt Styles/Daily Viz</a> used by permission <a href="https://github.com/stiles/graphics/tree/master/koreans-in-usa-counties-choropleth-20180116">(source)</a> | '+
+            'Map tiles by E. Fosler-Lussier, made with <a href="https://www.naturalearthdata.com">Natural Earth</a>.'});
+tiles.addTo(map);
+//var nameLayer= L.tileLayer('http://localhost:8000/geography-gray-countries/{z}/{x}/{y}.png', {tms: true}).setOpacity(0.5).addTo(map);
+
+
+var scale=[0.2, 0.5, 1.5, 2.5, 7];
+
+var color = d3.scale.threshold()
+        .domain(scale)
+        .range(['#C5DFDF', '#8BC0BF', '#51A09E', '#17807E', '#11605E', '#0B403F']);
+
+var counties = [];
+var states = [];
+var tip;
+
+var statesOverlay = L.d3SvgOverlay(function(sel, proj) {
+    var upd = sel.selectAll('path').data(states);
+    upd.enter()
+        .append('path')
+        .attr('d',proj.pathFromGeojson)
+        .attr('stroke','white')
+        .attr('stroke-opacity','0.6')
+        .attr('fill','none')
+    upd.attr('stroke-width', 0.8 / proj.scale);
+    $("#loadingbox").css('display','none');
+});
+
+var countiesOverlay = L.d3SvgOverlay(function(sel, proj) {
+    sel.attr("pointer-events","all");
+
+    if (typeof tip != "undefined") {
+        tip.hide();
+    }
+    tip = d3.tip()
+        .attr('class', 'd3-tip')
+        .style('z-index','1001')
+        .html(function(d) {
+            var retstr;
+            if (d.properties.GEO_ID in pct) {
+                retstr = pct[d.properties.GEO_ID] + "% of people in "+place[d.properties.GEO_ID]+" are Korean.";
+            } else {
+                retstr = "Data for "+d.properties.NAME+" "+d.properties.LSAD+" are not available.";
+            }
+            return retstr; 
+        }); 
+    sel.call(tip);
+    
+
+    var lasttip=undefined;
+
+    var upd = sel.selectAll('path').data(counties);
+    upd.enter()
+        .append('path')
+        .attr('d', proj.pathFromGeojson)
+        .attr('stroke', 'black')
+        .attr('fill', function(d){ 
+            var v=0;
+            if (d.properties.GEO_ID in pct) {
+                v=pct[d.properties.GEO_ID];
+            }
+            return color(v);  
+        })
+        .attr('fill-opacity', '0.9')
+        .attr('stroke-opacity', '0.3')
+        .attr('pointer-events','all')
+        .attr('style','pointer-events: auto;')
+        .on('mouseover', function(d,i,nodes) {
+            tip.show.call(this,d,i,nodes);
+            lasttip=this._leaflet_id;
+         })
+        .on('mouseout', function(d,i,nodes) {
+            tip.hide.call(this,d,i,nodes);
+            lasttip=undefined;
+        })
+        .on('click', function(d,i,nodes) {
+            if (this._leaflet_id == lasttip) {
+                tip.hide.call(this,d,i,nodes);
+                lasttip=undefined;
+            } else {
+                tip.show.call(this,d,i,nodes);
+                lasttip=this._leaflet_id;
+            }
+        });
+
+    upd.attr('stroke-width', 0.25 / proj.scale);
+});
+
+
+//L.control.layers({"Geo Tiles": tiles}, {"Countries": countiesOverlay}).addTo(map);
+
+var pct={};
+var place={};
+
+
+d3.json("gz_2010_us_050_00_5m.json",function(data) {
+    d3.json("koreanscounties.json",function(pcts) {
+        d3.json("gz_2010_us_040_00_5m.json",function(statedata) {
+            pcts.objects.koreanscounties.geometries.forEach(function(item) {
+                id="0500000US" + item.properties.fips;
+                pct[id]=item.properties.koreanpct;
+                place[id]=item.properties.place;
+            }); 
+            counties=data.features;
+            states=statedata.features;
+            countiesOverlay.addTo(map);
+            statesOverlay.addTo(map);
+        });        
+    });
+});
+
+var legend = L.control({position: 'bottomright'});
+
+legend.onAdd = function (map) {
+
+    var div = L.DomUtil.create('div', 'info legend'),
+        grades = [0].concat(scale),
+        labels = [];
+
+    // loop through our density intervals and generate a label with a colored square for each interval
+    for (var i = 0; i < grades.length -1; i++) {
+        div.innerHTML +=
+            '<i style="background:' + color(grades[i] + 1) + '"></i> ' +
+            grades[i] + (grades[i + 1] ? '&ndash;' + grades[i + 1] + '%<br>' : '+');
+    }
+
+    return div;
+};
+
+legend.addTo(map);
+
+</script>
+    
+</body>
+</html>

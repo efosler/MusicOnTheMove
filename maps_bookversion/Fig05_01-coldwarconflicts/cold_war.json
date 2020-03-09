@@ -1,0 +1,557 @@
+{
+	"Title": "Cold War Conflicts Supported By Superpowers",
+	"Original Author": "M. Sewell",
+	"Citation": "M. Sewell, 'The Cold War,' Cambridge Perspectives in History, Cambridge Press, P. 62, 2002.",
+	"Data Author": "D. Fosler-Lussier",
+	"Data": [
+  {
+    "Dates": 1954,
+    "Country": "Guatemala",
+    "ISO_A3": "GTM",
+    "Intervener": "USA",
+    "Notes": "US-backed coup",
+    "Offset": [1,1]
+  },
+  {
+    "Dates": "1954-62",
+    "Country": "Vietnam",
+    "ISO_A3": "VNM",
+    "Intervener": "USA",
+    "Notes": "support for building a South Vietnamese state",
+    "Offset": [-2,3]
+  },
+  {
+    "Dates": "1962-73",
+    "Country": "Vietnam",
+    "ISO_A3": "VNM",
+    "Intervener": "China",
+    "Notes": "backed North Vietnamese",
+    "Offset": [-2,3]
+    },
+  {
+    "Dates": "1962-73",
+    "Country": "Vietnam",
+    "ISO_A3": "VNM",
+    "Intervener": "USA",
+    "Notes": "backed South Vietnamese",
+    "Offset": [-2,3]
+  },
+  {
+    "Dates": "1964-73",
+    "Country": "Vietnam",
+    "ISO_A3": "VNM",
+    "Intervener": "USSR",
+    "Notes": "backed North Vietnamese",
+    "Offset": [-2,3]
+  },
+  {
+    "Dates": "1962-68",
+    "Country": "Laos",
+    "ISO_A3": "LAO",
+    "Intervener": "China",
+    "Notes": "intervention in civil war"
+  },
+  {
+    "Dates": "1962-68",
+    "Country": "Laos",
+    "ISO_A3": "LAO",
+    "Intervener": "USA",
+    "Notes": "intervention in civil war"
+  },
+  {
+    "Dates": "1965-1969",
+    "Country": "Thailand",
+    "ISO_A3": "THA",
+    "Intervener": "China",
+    "Notes": "backed insurgents"
+  },
+  {
+    "Dates": "1965-1969",
+    "Country": "Thailand",
+    "ISO_A3": "THA",
+    "Intervener": "USA",
+    "Notes": "backed government against insurgents"
+  },
+  {
+    "Dates": "1959-64",
+    "Country": "Zanzibar",
+    "ISO_A3": "TZA",
+    "Intervener": "USSR",
+    "Notes": "funded one faction in civil war"
+  },
+  {
+    "Dates": "1959-64",
+    "Country": "Zanzibar",
+    "ISO_A3": "TZA",
+    "Intervener": "China",
+    "Notes": "funded one faction in civil war"
+  },
+  {
+    "Dates": 1964,
+    "Country": "Zanzibar",
+    "ISO_A3": "TZA",
+    "Intervener": "USA",
+    "Notes": "supported merger of Tanganyika and Zanzibar"
+  },
+  {
+    "Dates": "1954-1962",
+    "Country": "Algeria",
+    "ISO_A3": "DZA",
+    "Intervener": "USSR",
+    "Notes": "support for National Liberation Front"
+  },
+  {
+    "Dates": "1954-1962",
+    "Country": "Algeria",
+    "ISO_A3": "DZA",
+    "Intervener": "China",
+    "Notes": "support for National Liberation Front"
+  },
+  {
+    "Dates": 1965,
+    "Country": "Dominican Republic",
+    "ISO_A3": "DOM",
+    "Intervener": "USA",
+    "Notes": "US invasion"
+  },
+  {
+    "Dates": 1965,
+    "Country": "Chad",
+    "ISO_A3": "TCD",
+    "Intervener": "USA",
+    "Notes": "intervention in civil war"
+  },
+  {
+    "Dates": 1956,
+    "Country": "Egypt",
+    "ISO_A3": "EGY",
+    "Intervener": "USSR",
+    "Notes": "Suez crisis"
+  },
+  {
+    "Dates": 1956,
+    "Country": "Egypt",
+    "ISO_A3": "EGY",
+    "Intervener": "USA",
+    "Notes": "Suez crisis"
+  },
+  {
+    "Dates": 1986,
+    "Country": "Libya",
+    "ISO_A3": "LBY",
+    "Intervener": "USA",
+    "Notes": "bombing"
+  },
+  {
+    "Dates": "1963-74",
+    "Country": "Guinea-Bissau",
+    "ISO_A3": "GNB",
+    "Intervener": "USSR",
+    "Notes": "support for revolution"
+  },
+  {
+    "Dates": "1967, 1973",
+    "Country": "Israel",
+    "ISO_A3": "ISR",
+    "Intervener": "USA",
+    "Notes": "US and USSR backed opposite sides in Arab-Israeli war"
+  },
+  {
+    "Dates": "1967, 1973",
+    "Country": "Israel",
+    "ISO_A3": "ISR",
+    "Intervener": "USSR",
+    "Notes": "US and USSR backed opposite sides in Arab-Israeli war"
+  },
+  {
+    "Dates": 1952,
+    "Country": "Iran",
+    "ISO_A3": "IRN",
+    "Intervener": "USA",
+    "Notes": "backing for coup"
+  },
+  {
+    "Dates": 1978,
+    "Country": "Afghanistan",
+    "ISO_A3": "AFG",
+    "Intervener": "USSR",
+    "Notes": "support for insurgents"
+  },
+  {
+    "Dates": "1979-89",
+    "Country": "Afghanistan",
+    "ISO_A3": "AFG",
+    "Intervener": "USSR",
+    "Notes": "military intervention"
+  },
+  {
+    "Dates": 1962,
+    "Country": "Cuba",
+    "ISO_A3": "CUB",
+    "Intervener": "USA",
+    "Notes": "invasion, Cuban missile crisis"
+  },
+  {
+    "Dates": 1962,
+    "Country": "Cuba",
+    "ISO_A3": "CUB",
+    "Intervener": "USSR",
+    "Notes": "Cuban missile crisis"
+  },
+  {
+    "Dates": 1962,
+    "Country": "India and China",
+    "ISO_A3": "IND_CHN",
+    "Intervener": "USA",
+    "Notes": "negotiator in border war"
+  },
+  {
+    "Dates": 1962,
+    "Country": "India and China",
+    "ISO_A3": "IND_CHN",
+    "Intervener": "USSR",
+    "Notes": "negotiator in border war"
+  },
+  {
+    "Dates": "1965-1983",
+    "Country": "Thailand",
+    "ISO_A3": "THA",
+    "Intervener": "China",
+    "Notes": "supported insurgents"
+  },
+  {
+    "Dates": "1978-79",
+    "Country": "Cambodia",
+    "ISO_A3": "KHM",
+    "Intervener": "USA",
+    "Notes": "US and China backed opposite sides in war"
+  },
+  {
+    "Dates": "1978-79",
+    "Country": "Cambodia",
+    "ISO_A3": "KHM",
+    "Intervener": "China",
+    "Notes": "US and China backed opposite sides in war"
+  },
+  {
+    "Dates": "1979-92",
+    "Country": "El Salvador",
+    "ISO_A3": "SLV",
+    "Intervener": "USA",
+    "Notes": "military aid against insurgents",
+    "Offset": [-1,-1]
+  },
+  {
+    "Dates": "1979-90",
+    "Country": "Nicaragua",
+    "ISO_A3": "NIC",
+    "Intervener": "USA",
+    "Notes": "support for insurgents",
+    "Offset": [1,1]
+  },
+  {
+    "Dates": 1959,
+    "Country": "Venezuela",
+    "ISO_A3": "VEN",
+    "Intervener": "USA",
+    "Notes": "support for government campaign against leftists",
+    "Offset": [0,2]
+  },
+  {
+    "Dates": "1954-65",
+    "Country": "Bolivia",
+    "ISO_A3": "BOL",
+    "Intervener": "USA",
+    "Notes": "supported Bolivian government"
+  },
+  {
+    "Dates": 1973,
+    "Country": "Chile",
+    "ISO_A3": "CHL",
+    "Intervener": "USA",
+    "Notes": "support for coup"
+  },
+  {
+    "Dates": "1968-",
+    "Country": "Brazil",
+    "ISO_A3": "BRA",
+    "Intervener": "USA",
+    "Notes": "supported government against opposition",
+    "Offset": [0,2]
+  },
+  {
+    "Dates": "1974-83",
+    "Country": "Argentina",
+    "ISO_A3": "ARG",
+    "Intervener": "USA",
+    "Notes": "supported government against opposition"
+  },
+  {
+    "Dates": "1964-82",
+    "Country": "Bolivia",
+    "ISO_A3": "BOL",
+    "Intervener": "USA",
+    "Notes": "supported government against opposition"
+  },
+  {
+    "Dates": "1978-1984",
+    "Country": "Uruguay",
+    "ISO_A3": "URY",
+    "Intervener": "USA",
+    "Notes": "supported government against opposition"
+  },
+  {
+    "Dates": "1963-73",
+    "Country": "Chile",
+    "ISO_A3": "CHL",
+    "Intervener": "USA",
+    "Notes": "supported government against opposition"
+  },
+  {
+    "Dates": "1954-75",
+    "Country": "Paraguay",
+    "ISO_A3": "PRY",
+    "Intervener": "USA",
+    "Notes": "aid and anti-communist pressure on government"
+  },
+  {
+    "Dates": 1962,
+    "Country": "Namibia",
+    "ISO_A3": "NAM",
+    "Intervener": "USSR",
+    "Notes": "supported insurgents"
+  },
+  {
+    "Dates": 1962,
+    "Country": "Namibia",
+    "ISO_A3": "NAM",
+    "Intervener": "China",
+    "Notes": "supported insurgents"
+  },
+  {
+    "Dates": "1975-76",
+    "Country": "Angola",
+    "ISO_A3": "AGO",
+    "Intervener": "USA",
+    "Notes": "intervention in civil war"
+  },
+  {
+    "Dates": "1975-76",
+    "Country": "Angola",
+    "ISO_A3": "AGO",
+    "Intervener": "USSR",
+    "Notes": "intervention in civil war"
+  },
+  {
+    "Dates": "1975-76",
+    "Country": "Angola",
+    "ISO_A3": "AGO",
+    "Intervener": "China",
+    "Notes": "intervention in civil war"
+  },
+  {
+    "Dates": "1964-79",
+    "Country": "Zimbabwe",
+    "ISO_A3": "ZWE",
+    "Intervener": "USSR",
+    "Notes": "USSR and China supported different factions in civil war"
+  },
+  {
+    "Dates": "1964-79",
+    "Country": "Zimbabwe",
+    "ISO_A3": "ZWE",
+    "Intervener": "China",
+    "Notes": "USSR and China supported different factions in civil war"
+  },
+  {
+    "Dates": "1977-1992",
+    "Country": "Mozambique",
+    "ISO_A3": "MOZ",
+    "Intervener": "USSR",
+    "Notes": "intervention in civil war"
+  },
+  {
+    "Dates": "1960-65",
+    "Country": "Congo (Belgian Congo) and Burundi",
+    "ISO_A3": "COD_BDI",
+    "Intervener": "China",
+    "Notes": "economic aid and support for insurgents"
+  },
+  {
+    "Dates": "1964-65",
+    "Country": "Congo (Belgian Congo) and Burundi",
+    "ISO_A3": "COD_BDI",
+    "Intervener": "USA",
+    "Notes": "support for counter-insurgency"
+  },
+  {
+    "Dates": "1945-53",
+    "Country": "Korea",
+    "ISO_A3": "KOR_PRK",
+    "Intervener": "USA",
+    "Notes": "occupation of southern Korea, then Korean War and military aid"
+  },
+  {
+    "Dates": "1945-53",
+    "Country": "Korea",
+    "ISO_A3": "KOR_PRK",
+    "Intervener": "USSR",
+    "Notes": "occupation of northern Korea, then Korean War; military aid thereafter"
+  },
+  {
+    "Dates": "1950-53",
+    "Country": "Korea",
+    "ISO_A3": "KOR_PRK",
+    "Intervener": "China",
+    "Notes": "support for North in Korean War; attempted coup in 1956; mutual aid treaty"
+  },
+  {
+    "Dates": "1953-78",
+    "Country": "Ethiopia",
+    "ISO_A3": "ETH",
+    "Intervener": "USA",
+    "Notes": "supported armed forces; intervened in Ogaden War"
+  },
+  {
+    "Dates": "1977-78",
+    "Country": "Somalia",
+    "ISO_A3": "SOM",
+    "Intervener": "USSR",
+    "Notes": "US and USSR supported opposite sides in Ogaden War"
+  },
+  {
+    "Dates": "1977-78",
+    "Country": "Somalia",
+    "ISO_A3": "SOM",
+    "Intervener": "US",
+    "Notes": "US and USSR supported opposite sides in Ogaden War"
+  },
+  {
+    "Dates": 1962,
+    "Country": "Yemen",
+    "ISO_A3": "YEM",
+    "Intervener": "USA",
+    "Notes": "military aid to government"
+  },
+  {
+    "Dates": 1962,
+    "Country": "Yemen",
+    "ISO_A3": "YEM",
+    "Intervener": "USSR",
+    "Notes": "supported Saudi-led insurgency"
+  },
+  {
+    "Dates": "1968-70",
+    "Country": "Oman",
+    "ISO_A3": "OMN",
+    "Intervener": "USSR",
+    "Notes": "trained insurgents"
+  },
+  {
+    "Dates": "1970-75",
+    "Country": "Oman",
+    "ISO_A3": "OMN",
+    "Intervener": "USA",
+    "Notes": "supported government against insurgents"
+  },
+  {
+    "Dates": "1958-66",
+    "Country": "Colombia",
+    "ISO_A3": "COL",
+    "Intervener": "USA",
+    "Notes": "support for counter-insurgency"
+  },
+  {
+    "Dates": "1945-89",
+    "Country": "Germany",
+    "ISO_A3": "DEU",
+    "Intervener": "USA",
+    "Notes": "occupation of western Germany, 1945-52; continued military presence thereafter"
+  },
+  {
+    "Dates": "1945-89",
+    "Country": "Germany",
+    "ISO_A3": "DEU",
+    "Intervener": "USSR",
+    "Notes": "occupation of eastern Germany, 1945-49; satellite state thereafter"
+  },
+  {
+    "Dates": "1945-55",
+    "Country": "Austria",
+    "ISO_A3": "AUT",
+    "Intervener": "USA",
+    "Notes": "partial occupation"
+  },
+  {
+    "Dates": "1945-55",
+    "Country": "Austria",
+    "ISO_A3": "AUT",
+    "Intervener": "USSR",
+    "Notes": "partial occupation"
+  },
+  {
+    "Dates": "1979-2018",
+    "Country": "Taiwan",
+    "ISO_A3": "TWN",
+    "Intervener": "USA",
+    "Notes": "ambiguous security \"assurances\""
+  },
+  {
+    "Dates": "1949-79",
+    "Country": "Taiwan",
+    "ISO_A3": "TWN",
+    "Intervener": "China",
+    "Notes": "attempts at occupation"
+  },
+  {
+    "Dates": "1956",
+    "Country": "Hungary",
+    "ISO_A3": "HUN",
+    "Intervener": "USSR",
+    "Notes": "USSR invades Hungary"
+  },
+  {
+    "Dates": "1968",
+    "Country": "Czech Republic and Slovakia (Czechoslovakia)",
+    "ISO_A3": "CZE_SVK",
+    "Intervener": "USSR",
+    "Notes": "USSR invades Czechoslovakia",
+    "Offset": [0.25,0.5]
+  },
+  {
+    "Dates": "1945-",
+    "Country": "Philippines",
+    "ISO_A3": "PHL",
+    "Intervener": "USA",
+    "Notes": "US military bases and counter-insurgency support"
+  },
+  {
+    "Dates": "1956-57",
+    "Country": "Syria",
+    "ISO_A3": "SYR",
+    "Intervener": "USSR",
+    "Notes": "USSR sells arms to Syria"
+  },
+  {
+    "Dates": "1956-57",
+    "Country": "Syria",
+    "ISO_A3": "SYR",
+    "Intervener": "USA",
+    "Notes": "US supported attempted coup"
+  },
+  {
+    "Dates": "1957-58",
+    "Country": "Indonesia",
+    "ISO_A3": "IDN",
+    "Intervener": "USA",
+    "Notes": "US supported attempted coup"
+  },
+  {
+    "Dates": "1965",
+    "Country": "Indonesia",
+    "ISO_A3": "IDN",
+    "Intervener": "USA",
+    "Notes": "US supported government purge of insurgents and citizens"
+  }
+]
+}

@@ -1,0 +1,555 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Music on the Move: Superpower interventions during the Cold War</title>
+    <!--
+Superpower interventions during the Cold War
+CC-BY-NC 4.0
+Eric Fosler-Lussier, The Ohio State University
+for the book, "Music on the Move" by Danielle Fosler-Lussier, U. Michigan Press, 2020.
+
+This map represents military interventions instigated or supported by superpowers during the Cold War. 
+Map after Mike Sewell, The Cold War (Cambridge University Press, 2002), 116-117.
+Further data from other sources listed in the bibliography.
+
+Thank you to Ash Kyd for providing customizeable geojson for countries, which helped speed up rendering immensely. 
+https://geojson-maps.ash.ms
+
+Map tiles were created by Eric Fosler-Lussier from Natural Earth data and are available under a CC0 license to all.
+-->
+    <style type="text/css">
+        html { height: 100% }
+        body { height: 100%; margin: 0; padding: 0 }
+        #map-canvas { height: 100% }
+        .box {
+            border: 1px solid #EEE;
+            margin: 3px;
+            padding: 5px;
+            background-color: white;
+            font-family: sans-serif;
+            font-size: 12px;
+            z-index: 1000;
+        }
+        .title {
+            font-weight: 600;
+        }
+        .source {
+            position: absolute;
+            width: 50%;
+            top: 6px;
+            left: 50px;
+        }
+        .bibliography {
+            position: absolute;
+            max-width: 50%;
+            bottom: 20px;
+            left: 10px;
+        }
+        .flagIcon { border: 0px }
+        .conflictCountry { font-weight: bold; text-decoration: underline }
+        .conflictDate {font-weight: bold;}
+        .conflictIntervener {font-style: italic}    
+    </style>
+    
+    <meta http-equiv="X-UA-Compatible" content="IE=Edge">
+
+</head>
+<body>
+  <div id="map-canvas"></div>
+  <!--
+  <div class="source box">
+        <div class="title">Music on the Move: Superpower interventions during the Cold War</div>
+        This map represents military interventions instigated or supported by superpowers during the Cold War. Map after Mike Sewell, The Cold War (Cambridge University Press, 2002), 116-117. Further data from other sources listed in the bibliography.
+  -->  
+  </div>
+  <div class="bibliography box">
+        <div id="bibtitle" class="title"><a href="#" onclick="expandbib()">Bibliography (expand)</a></div> 
+        <ul id="biblist" hidden>
+            <li>Mike Sewell, <i>The Cold War</i> (Cambridge University Press, 2002), 116-117.</li> 
+            <li>J. Patrice McSherry, "Tracking the Origins of a State Terror Network: Operation Condor," Latin American Perspectives 29, no. 1 (January 01, 2002), 38-60.</li>
+            <li>Gregg A. Brazinsky, <i>Winning the Third World: Sino-American Rivalry During the Cold War</i> (Chapel Hill: The University of North Carolina Press, 2017), 231-269.</li>
+            <li>Mary Dudziak, <i>War-Time: An Idea, Its History, Its Consequences</i> (New York: Oxford University Press, 2012), 137-156.</li>
+        </ul>
+    </div>
+    <svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="70" height="300" viewBox="0 0 70 300">
+        <symbol id="USAflag" width="50" height="26" viewBox="0 0 300 158" >
+        <g transform="scale(0.0405)">
+        <rect width="7410" height="3900" fill="#b22234"/>
+        <path d="M0,450H7410m0,600H0m0,600H7410m0,600H0m0,600H7410m0,600H0" stroke="#fff" stroke-width="300"/>
+        <rect width="2964" height="2100" fill="#3c3b6e"/>
+        <g fill="#fff">
+        <g id="s18">
+        <g id="s9">
+        <g id="s5">
+        <g id="s4">
+        <path id="s" d="M247,90 317.534230,307.082039 132.873218,172.917961H361.126782L176.465770,307.082039z"/>
+        <use xlink:href="#s" y="420"/>
+        <use xlink:href="#s" y="840"/>
+        <use xlink:href="#s" y="1260"/>
+        </g>
+        <use xlink:href="#s" y="1680"/>
+        </g>
+        <use xlink:href="#s4" x="247" y="210"/>
+        </g>
+        <use xlink:href="#s9" x="494"/>
+        </g>
+        <use xlink:href="#s18" x="988"/>
+        <use xlink:href="#s9" x="1976"/>
+        <use xlink:href="#s5" x="2470"/>
+        </g>
+        </g>
+        </symbol>
+        <symbol id="Chinaflag" width="50" height="26" viewBox="0 0 50 26">
+        <g transform="scale(1.8)">
+        <defs>
+        <path id="chs" d="M0,-1 0.587785,0.809017 -0.951057,-0.309017H0.951057L-0.587785,0.809017z" fill="#ffde00"/>
+        </defs>
+        <rect width="30" height="20" fill="#de2910"/>
+        <use xlink:href="#chs" transform="translate(5,5) scale(3)"/>
+        <use xlink:href="#chs" transform="translate(10,2) rotate(23.036243)"/>
+        <use xlink:href="#chs" transform="translate(12,4) rotate(45.869898)"/>
+        <use xlink:href="#chs" transform="translate(12,7) rotate(69.945396)"/>
+        <use xlink:href="#chs" transform="translate(10,9) rotate(20.659808)"/>
+        </g>
+        </symbol>
+        <symbol
+        width="50"
+        height="26"
+        id="USSRflag">
+        <g transform="scale(0.0833) translate(-80,-40)">
+        <defs
+            id="defs14" />
+        <path
+            fill="#bc0000"
+            fill-opacity="1"
+            d="M0 0h1200v600H0z"
+            id="path2"
+            style="fill:#cc0000;fill-opacity:1" />
+        <path
+            id="path11728"
+            d="m 200.0005,37.5 -8.41933,25.911886 H 164.336 L 186.37777,79.426122 177.95844,105.338 200.0005,89.323465 222.04257,105.338 213.62324,79.426122 235.665,63.411886 h -27.24516 z m 0,13.499987 5.38828,16.583473 h 17.43718 l -14.107,10.249496 5.38827,16.583472 L 200.0005,84.167224 185.89378,94.416428 191.28205,77.832956 177.17504,67.58346 h 17.43718 z"
+            style="fill:#ffd700;fill-opacity:1;stroke:none;stroke-width:0.14999977px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1" />
+        <g
+            style="fill:#ffd700;fill-opacity:1"
+            id="g2900"
+            transform="matrix(0.98931879,0,0,0.98673811,3.8297658,3.7659398)">
+            <path
+            id="rect4165-6"
+            d="m 137.43744,171.69421 18.86296,18.9937 17.78834,-17.66589 c 27.05847,29.021 55.43807,56.99501 82.28704,86.12782 4.03444,4.06233 10.59815,4.085 14.66056,0.0506 4.06232,-4.03445 4.08499,-10.59815 0.0506,-14.66056 -28.81871,-27.1901 -57.72545,-54.60143 -86.55328,-81.89095 l 23.96499,-23.80003 -33.34026,-4.61605 z"
+            style="fill:#ffd700;fill-opacity:1;stroke:none;stroke-width:0.48919073;stroke-miterlimit:4;stroke-dasharray:none;stroke-dashoffset:0;stroke-opacity:1" />
+            <path
+            id="path4179-3"
+            d="m 198.2887,110.1955 c 15.51743,8.7394 27.29872,21.28122 34.2484,34.3924 7.04394,13.28902 10.13959,27.16218 10.20325,38.25433 0.13054,22.74374 -18.43771,41.18184 -41.18183,41.18184 -12.13597,0 -23.04607,-5.24868 -30.58302,-13.60085 l -4.16863,3.51033 c -0.70999,-0.27231 -1.46387,-0.41221 -2.22429,-0.41276 -1.82948,1.9e-4 -3.56621,0.80531 -4.74859,2.20136 -2.97368,0.38896 -5.46251,2.44529 -6.40534,5.29224 -3.13486,6.28843 -8.63524,11.21997 -15.29104,13.4776 -0.0637,0.0216 -0.11992,0.05 -0.1758,0.0783 -3.07749,1.12758 -6.16259,3.1643 -8.78919,5.80245 -5.19155,5.23656 -7.72858,11.93658 -6.30024,16.63822 -0.14098,0.40857 -0.21361,0.83759 -0.21498,1.26979 1.5e-4,2.17082 1.75991,3.93058 3.93073,3.93073 0.54341,-0.002 1.08053,-0.11639 1.57745,-0.33632 4.69369,1.05881 11.06885,-1.54582 16.05444,-6.55917 2.82624,-2.85072 4.94356,-6.22349 5.98303,-9.53062 2.31696,-6.62278 7.29699,-12.01856 13.62281,-15.05312 0.15105,-0.0725 0.27303,-0.14714 0.38218,-0.22358 2.12082,-1.01408 3.67251,-2.92895 4.225,-5.2139 9.70222,11.44481 24.25255,18.75299 40.51876,19.13577 29.83352,0.70205 52.13299,-21.25802 53.16414,-52.83642 0.51894,-15.89259 -5.62993,-36.3847 -19.6412,-53.19089 -10.70835,-12.84441 -26.40987,-23.50795 -44.18699,-28.20777 z"
+            style="fill:#ffd700;fill-opacity:1;stroke:none;stroke-width:0.50003481;stroke-miterlimit:4;stroke-dasharray:none;stroke-dashoffset:0;stroke-opacity:1" />
+        </g>
+        </g>
+        </symbol>
+        <symbol id="China_USAflag" width="50" height="26" viewBox="0 0 50 26">
+        <use xlink:href="#Chinaflag" x="0" y="0" transform="translate(-2,0)"/>
+        <use xlink:href="#USAflag" x="25" y="0"/>
+        </symbol>
+        <symbol id="USA_USSRflag" width="50" height="26" viewBox="0 0 50 26">
+        <use xlink:href="#USAflag" x="0" y="0"/>
+        <use xlink:href="#USSRflag" x="24" y="0"/>
+        </symbol>
+        <symbol id="China_USSRflag" width="50" height="26" viewBox="0 0 50 26">
+        <use xlink:href="#Chinaflag" x="0" y="0" transform="translate(-2,0)"/>
+        <use xlink:href="#USSRflag" x="24" y="0"/>
+        </symbol>
+        <symbol id="China_USA_USSRflag" width="50" height="26" viewBox="0 0 50 26">
+        <use xlink:href="#Chinaflag" x="0" y="0" transform="translate(-2,0)"/>
+        <use xlink:href="#USAflag" x="16" y="0"/>
+        <use xlink:href="#USSRflag" x="33" y="0"/>
+        </symbol>
+    </svg>
+  
+<!-- the following are polyfill for older browsers not implementing fetch/promise-->
+<script src="polyfill.min.js"></script>
+<script src="fetch.umd.js"></script>
+<!-- -->
+
+
+<link rel="stylesheet" href="leaflet.css"/>
+<script src="leaflet.js"></script>
+    
+<script src="d3.v5.min.js"></script>
+<script src="L.D3SvgOverlay.min.js"></script>
+<script>
+
+var map = L.map("map-canvas", {center: [2.284,25.136], zoom: 2, maxZoom: 4});
+map.fitBounds([[-70,-113],[73,167]])
+if (map.getSize().x > 1350) {
+    map.setZoom(3,{animate: false});
+}
+var tiles = L.tileLayer('geography-gray-basemap/{z}/{x}/{y}.png', {
+                        tms: true, 
+                        attribution: 'Map tiles by E. Fosler-Lussier, made with <a href="https://www.naturalearthdata.com">Natural Earth</a>.'
+                        });
+tiles.addTo(map);
+
+var colormap = {
+    "China": "#dd0000",
+    "USSR": "#00dd00",
+    "USA": "#0000dd",
+    "USSR+China": "#dddd00",
+    "USA+China": "#dd00dd",
+    "USA+USSR": "#00dddd",
+    "USA+USSR+China": "#d2691e"
+}
+var patternsize=5;
+var patternrectwidth=1;
+// special offsets for China to deal with double rotation
+var chpatternsize=7;
+var chtranslate=3;
+var chtranslate2=0;
+
+var countries = [];
+var countriesOverlay = L.d3SvgOverlay(function(sel, proj) {
+
+    var svg=d3.select("svg");
+    var defs = svg.append("defs");
+
+    function addRect(pat,options) {
+        ops = {width: patternsize, height: patternsize, transform: "translate(0,0)", fill:"#FFFFFF"};
+        for(o in options) {
+            ops[o]=options[o];
+        }
+        var r=pat.append("rect");
+        for(o in ops) {
+            r=r.attr(o,ops[o]);
+        }
+        return r;
+    }
+
+    function addPattern(def,patid,options) {
+        ops = {width: patternsize, height:patternsize, patternUnits: "userSpaceOnUse", patternTransform: ""};
+        for (o in options) {
+            ops[o]=options[o];
+        }
+        var p=defs.append('pattern').attr("id",patid);
+        for (o in ops) {
+            p=p.attr(o,ops[o]);
+        }
+        return p;
+    }
+
+    // USA pattern: white background, blue stripes
+    var pattern = addPattern(defs,"USA_base",{patternTransform: ""});
+    addRect(pattern,{width: patternrectwidth, fill: "#88AAEE"});
+    
+    pattern = addPattern(defs,"USSR_base",{patternTransform: ""});
+    addRect(pattern,{height: patternrectwidth, fill: "#EEAA88"});
+    
+    pattern = addPattern(defs,"China_base",{});
+    //addRect(pattern,{height: patternrectwidth, fill: "#88EE88"});
+    addRect(pattern,{height: 1, width: 1, fill: "#000000", transform: "translate(2,2)"});
+    
+    pattern = addPattern(defs,"USA",{patternTransform: "rotate(45)"});
+    addRect(pattern,{});
+    addRect(pattern,{fill: "url(#USA_base)", transform: ""});
+
+    pattern = addPattern(defs,"USSR",{patternTransform: "rotate(45)"});
+    addRect(pattern,{});
+    addRect(pattern,{fill: "url(#USSR_base)"});
+ 
+    pattern = addPattern(defs,"China",{patternTransform: "rotate(45)"});
+    addRect(pattern,{});
+    addRect(pattern,{fill: "url(#China_base)"});
+
+    pattern = addPattern(defs,"USA+USSR+China",{patternTransform: "rotate(45)"});
+    addRect(pattern,{});
+    addRect(pattern,{fill: "url(#USSR_base)"});
+    addRect(pattern,{fill: "url(#USA_base)"});
+    addRect(pattern,{fill: "url(#China_base)"});
+    
+    pattern = addPattern(defs,"USA+USSR",{patternTransform: "rotate(45)"});
+    addRect(pattern,{});
+    addRect(pattern,{fill: "url(#USSR_base)"});
+    addRect(pattern,{fill: "url(#USA_base)"});
+
+    pattern = addPattern(defs,"USA+China",{patternTransform: "rotate(45)"});
+    addRect(pattern,{});
+    addRect(pattern,{fill: "url(#USA_base)"});
+    addRect(pattern,{fill: "url(#China_base)"});
+ 
+    pattern = addPattern(defs,"USSR+China",{patternTransform: "rotate(45)"});
+    addRect(pattern,{});
+    addRect(pattern,{fill: "url(#USSR_base)"});
+    addRect(pattern,{fill: "url(#China_base)"});
+
+     
+  var upd = sel.selectAll('path').data(countries);
+  upd.enter()
+    .append('path')
+    .attr('d', proj.pathFromGeojson)
+    .attr('stroke', 'black')
+    .attr('fill', function(c){return c.properties.fill;})
+    .attr('fill-opacity', '1')
+    .attr('stroke-width',  1 / (proj.scale*3));
+});
+
+var svgStrings={
+    /*China: {
+        legend: "China intervention", 
+        flag: "<svg width='50' height='26' viewBox='0 0 50 26'><use xlink:href='#Chinaflag' width='50' height='26' viewBox='0 0 50 26'/></svg>",
+        fill: "<svg width='50' height='26' viewbox='0 0 50 20'><rect width=50 height=26 fill='"+colormap["China"]+"'></rect></svg>"
+    },*/
+    USA: {
+        legend: "USA intervention", 
+        flag: "<svg width='50' height='26' viewBox='0 0 50 26'><use xlink:href='#USAflag' width='50' height='26' viewBox='0 0 50 26'/></svg>",
+        fill: "<svg width='50' height='26' viewbox='0 0 50 20'><rect width=50 height=26 fill='"+colormap["USA"]+"'></rect></svg>"
+    },
+    USSR: {
+        legend: "USSR intervention", 
+        flag:"<svg width='50' height='26' viewBox='0 0 50 26'><use xlink:href='#USSRflag' width='50' height='26' viewBox='0 0 50 26'/></svg>",
+        fill:"<svg width='50' height='26' viewbox='0 0 50 20'><rect width=50 height=26 fill='"+colormap["USSR"]+"'></rect></svg>"
+    },
+    USA_China: {
+        legend: "USA and China intervention", 
+        flag:"<svg width='50' height='26' viewBox='0 0 50 26'><use xlink:href='#China_USAflag' width='50' height='26' viewBox='0 0 50 26'/></svg>",
+        fill:"<svg width='50' height='26' viewbox='0 0 50 20'><rect width=50 height=26 fill='"+colormap["USA+China"]+"'></rect></svg>"
+    },
+    USA_USSR: {
+        legend: "USA and USSR intervention", 
+        flag:"<svg width='50' height='26' viewBox='0 0 50 26'><use xlink:href='#USA_USSRflag' width='50' height='26' viewBox='0 0 50 26'/></svg>",
+        fill:"<svg width='50' height='26' viewbox='0 0 50 20'><rect width=50 height=26 fill='"+colormap["USA+USSR"]+"'></rect></svg>"
+    },
+    USSR_China: {
+        legend: "China and USSR intervention", 
+        flag:"<svg width='50' height='26' viewBox='0 0 50 26'><use xlink:href='#China_USSRflag' width='50' height='26' viewBox='0 0 50 26'/></svg>",
+        fill:"<svg width='50' height='26' viewbox='0 0 50 20'><rect width=50 height=26 fill='"+colormap["USSR+China"]+"'></rect></svg>"
+    },
+    USA_USSR_China: {
+        legend: "USA, USSR and China intervention", 
+        flag:"<svg width='50' height='26' viewBox='0 0 50 26'><use xlink:href='#China_USA_USSRflag' width='50' height='26' viewBox='0 0 50 26'/></svg>",
+        fill:"<svg width='50' height='26' viewbox='0 0 50 20'><rect width=50 height=26 fill='"+colormap["USA+USSR+China"]+"'></rect></svg>"
+    }
+};
+
+
+
+
+// Create icons for different flags
+var flags={
+    China: L.divIcon({className:"flagIcon", iconSize: [50,26], html:"<svg width='50' height='26' viewBox='0 0 50 26'><use xlink:href='#Chinaflag' width='50' height='26' viewBox='0 0 50 26'/></svg>"}),
+    USA: L.divIcon({className:"flagIcon", iconSize: [50,26], html:"<svg width='50' height='26' viewBox='0 0 50 26'><use xlink:href='#USAflag' width='50' height='26' viewBox='0 0 50 26'/></svg>"}),
+    USSR: L.divIcon({className:"flagIcon", iconSize: [50,26], html:"<svg width='50' height='26' viewBox='0 0 50 26'><use xlink:href='#USSRflag' width='50' height='26' viewBox='0 0 50 26'/></svg>"}),
+    USA_China: L.divIcon({className:"flagIcon", iconSize: [50,26], html:"<svg width='50' height='26' viewBox='0 0 50 26'><use xlink:href='#China_USAflag' width='50' height='26' viewBox='0 0 50 26'/></svg>"}),
+    USA_USSR: L.divIcon({className:"flagIcon", iconSize: [50,26], html:"<svg width='50' height='26' viewBox='0 0 50 26'><use xlink:href='#USA_USSRflag' width='50' height='26' viewBox='0 0 50 26'/></svg>"}),
+    USSR_China: L.divIcon({className:"flagIcon", iconSize: [50,26], html:"<svg width='50' height='26' viewBox='0 0 50 26'><use xlink:href='#China_USSRflag' width='50' height='26' viewBox='0 0 50 26'/></svg>"}),
+    USA_USSR_China: L.divIcon({className:"flagIcon", iconSize: [50,26], html:"<svg width='50' height='26' viewBox='0 0 50 26'><use xlink:href='#China_USA_USSRflag' width='50' height='26' viewBox='0 0 50 26'/></svg>"})
+}
+var small_flags={
+    China: L.divIcon({className:"flagIcon", iconSize: [25,13], html:"<svg width='25' height='13' viewBox='0 0 25 13'><use xlink:href='#Chinaflag' width='25' height='13' viewBox='0 0 25 13'/></svg>"}),
+    USA: L.divIcon({className:"flagIcon", iconSize: [25,13], html:"<svg width='25' height='13' viewBox='0 0 25 13'><use xlink:href='#USAflag' width='25' height='13' viewBox='0 0 25 13'/></svg>"}),
+    USSR: L.divIcon({className:"flagIcon", iconSize: [25,13], html:"<svg width='25' height='13' viewBox='0 0 25 13'><use xlink:href='#USSRflag' transform='scale(0.5)' width='50' height='26' viewBox='0 0 50 26'/>/></svg>"}),
+    USA_China: L.divIcon({className:"flagIcon", iconSize: [25,13], html:"<svg width='25' height='13' viewBox='0 0 25 13'><use xlink:href='#China_USAflag' width='25' height='13' viewBox='0 0 25 13'/></svg>"}),
+    USA_USSR: L.divIcon({className:"flagIcon", iconSize: [25,13], html:"<svg width='25' height='13' viewBox='0 0 25 13'><use xlink:href='#USA_USSRflag' width='25' height='13' viewBox='0 0 25 13'/></svg>"}),
+    USSR_China: L.divIcon({className:"flagIcon", iconSize: [25,13], html:"<svg width='25' height='13' viewBox='0 0 25 13'><use xlink:href='#China_USSRflag' width='25' height='13' viewBox='0 0 25 13'/></svg>"}),
+    USA_USSR_China: L.divIcon({className:"flagIcon", iconSize: [25,13], html:"<svg width='25' height='13' viewBox='0 0 25 13'><use xlink:href='#China_USA_USSRflag' width='25' height='13' viewBox='0 0 25 13'/></svg>"})
+}
+
+
+conflict_countries={};
+
+    
+var handleColdWar = function(conflictdata) {
+    //console.log(conflictdata); 
+    var conflict=conflictdata.Data;
+    conflict.forEach(function(c) {
+        c.ISO_A3.split("_").forEach(function(c2) { 
+            if (typeof conflict_countries[c2] == "undefined") {
+                conflict_countries[c2]={USA: false, USSR: false, China: false, 
+                                        conflicts:[], 
+                                        header:c.Country, 
+                                        text:"<div class='conflictCountry'>"+c.Country+"</div><br/>",
+                                        hashes: [],
+                                        conficts: {},
+                                        offset: null
+                                        };
+            }
+            if (typeof c.Offset != "undefined") {
+                conflict_countries[c2].offset=c.Offset;
+            }
+            conflict_countries[c2][c.Intervener]=true;
+            conflict_countries[c2].conflicts.push(c);
+            var hash=c.Dates+c.Notes;
+            if (typeof conflict_countries[c2].conflicts[hash] == "undefined") {
+                conflict_countries[c2].hashes.push(hash);
+                conflict_countries[c2].conflicts[hash] = {date: c.Dates, interveners: [c.Intervener], notes: c.Notes}
+            } else {
+                conflict_countries[c2].conflicts[hash].interveners.push(c.Intervener);
+            }
+        });
+    });
+    interveners=["USA","USSR","China"];
+    Object.keys(conflict_countries).forEach(function(c) {
+        var istr=interveners.filter(function(i) {return conflict_countries[c][i];}).join("+");
+        var fstr=interveners.filter(function(i) {return conflict_countries[c][i];}).join("_");
+        //conflict_countries[c].fill="url(#"+istr+")";
+        conflict_countries[c].fill=colormap[istr];
+        conflict_countries[c].flag=fstr;
+        conflict_countries[c].hashes.forEach(function(hash) {
+            conflict_countries[c].text=conflict_countries[c].text
+                +"<div class='conflict'> <span class='conflictDate'>"
+                +conflict_countries[c].conflicts[hash].date
+                +"</span>&nbsp;<span class='conflictIntervener'>("
+                +conflict_countries[c].conflicts[hash].interveners.join(", ")
+                +")&nbsp;&nbsp;</span><span class='conflictText'>"
+                +conflict_countries[c].conflicts[hash].notes
+                +"</span></div>";
+        });     
+    });
+};
+
+
+var handleCountries = function(data) {
+    //countries = data.features; 
+    data.features.forEach(function(c) { 
+        var countrycode=c.properties.ISO_A3;
+        if (typeof conflict_countries[countrycode] != "undefined") {
+            var concountry=conflict_countries[countrycode];
+            c.properties.fill=concountry.fill;
+            var centroid=findPrimaryCentroid(c.geometry);
+            if (concountry.offset != null) {
+                centroid[0]+=concountry.offset[0];
+                centroid[1]+=concountry.offset[1];
+            }
+            c.geometry.centroid=centroid;
+            L.marker(centroid,{icon: small_flags[concountry.flag], country:concountry.flag})
+                .bindPopup(concountry.text)
+                .addTo(map);
+            countries.push(c);
+        } else {
+            c.properties.fill="none";
+        }         
+    });
+    countriesOverlay.addTo(map);
+};
+
+var handleCountriesNew = function(data) {
+    //countries = data.features; 
+    data.features.forEach(function(c) { 
+        var countrycode=c.properties.iso_a3;
+        if (typeof conflict_countries[countrycode] != "undefined") {
+            var concountry=conflict_countries[countrycode];
+            c.properties.fill=concountry.fill;
+            var centroid=findPrimaryCentroid(c.geometry);
+            if (concountry.offset != null) {
+                centroid[0]+=concountry.offset[0];
+                centroid[1]+=concountry.offset[1];
+            }
+            c.geometry.centroid=centroid;
+            L.marker(centroid,{icon: small_flags[concountry.flag], country:concountry.flag})
+                .bindPopup(concountry.text)
+                .addTo(map);
+            countries.push(c);
+        } else {
+            c.properties.fill="none";
+        }         
+    });
+    countriesOverlay.addTo(map);
+};
+
+function flattenDeep(arr1) {
+   //return arr1.reduce((acc, val) => Array.isArray(val[0][0]) ? acc.concat(flattenDeep(val)) : acc.concat(val), []);
+   return arr1.reduce(function(acc, val) {return Array.isArray(val[0][0]) ? acc.concat(flattenDeep(val)) : acc.concat(val), []});
+}
+
+function findPrimaryCentroid(geometry) {
+    var bbox;
+
+    if (geometry.type == "MultiPolygon") {
+        var maxarea=0;
+        for(poly in geometry.coordinates) {
+            var boundingbox=findBoundingBox(geometry.coordinates[poly][0]);
+            var area=(boundingbox[1][0]-boundingbox[0][0])*(boundingbox[1][1]-boundingbox[0][1]);
+            if (area>maxarea) {
+                bbox=boundingbox;
+                maxarea=area;
+            }
+        }
+    } else { 
+        bbox=findBoundingBox(geometry.coordinates[0]);
+    }
+    // flip coordinates
+    return [(bbox[1][1]-bbox[0][1])/2+bbox[0][1], (bbox[1][0]-bbox[0][0])/2+bbox[0][0]];
+
+}
+
+// the reduce function walks along the coordinates and finds the minima and maxima in each dimension
+function findBoundingBox(arr1) {
+    
+    /*
+    return arr1.reduce((bbox,p) => [[bbox[0][0]<p[0]?bbox[0][0]:p[0],
+                                        bbox[0][1]<p[1]?bbox[0][1]:p[1]],
+                                    [bbox[1][0]>p[0]?bbox[1][0]:p[0],
+                                        bbox[1][1]>p[1]?bbox[1][1]:p[1]]],
+                                    [arr1[0],arr1[0]]);
+    
+     */                           
+    return arr1.reduce(function(bbox,p){return [[bbox[0][0]<p[0]?bbox[0][0]:p[0],
+                                                    bbox[0][1]<p[1]?bbox[0][1]:p[1]],
+                                                [bbox[1][0]>p[0]?bbox[1][0]:p[0],
+                                                    bbox[1][1]>p[1]?bbox[1][1]:p[1]]]},
+                        [arr1[0],arr1[0]]);
+    
+}
+
+var onRejection = function(error) { 
+    console.log(error); 
+}
+d3.json("cold_war.json").then(handleColdWar,onRejection);
+//d3.json("countries.geo.json").then(handleCountries,onRejection);
+
+d3.json("custom.geo.json").then(handleCountriesNew,onRejection);
+
+var legend = L.control({position: 'bottomright'});
+
+legend.onAdd = function (map) {
+
+    var div = L.DomUtil.create('div', 'info legend box');
+
+    for (c in svgStrings) {
+        div.innerHTML += svgStrings[c].flag + svgStrings[c].fill + '&nbsp;' + svgStrings[c].legend + '<br/>';
+    }
+    div.innerHTML += "<br/>Click on flags for country-specific details. <br/>"
+    return div;
+};
+
+legend.addTo(map);
+
+var zoomlevel=map.getZoom();
+map.on('zoomend',function() {
+    var newzoomlevel=map.getZoom();
+    if (newzoomlevel < 4 && zoomlevel>= 4) {
+        map.eachLayer(function (layer) {
+            if (typeof layer.options.country !== "undefined") {
+                layer.setIcon(small_flags[layer.options.country]);
+            }
+        });
+    } else if (newzoomlevel >=4 && zoomlevel < 4) {
+        map.eachLayer(function (layer) {
+            if (typeof layer.options.country !== "undefined") {
+                layer.setIcon(flags[layer.options.country]);
+            }
+        });
+    }
+    zoomlevel=newzoomlevel;
+});
+
+function expandbib() {
+    d3.select('#bibtitle').html('<a href="#" onclick="collapsebib()">Bibliography (collapse)</a>');
+    d3.select('#biblist').attr('hidden',null);
+}
+function collapsebib() {
+    d3.select('#bibtitle').html('<a href="#" onclick="expandbib()">Bibliography (expand)</a>');
+    d3.select('#biblist').attr('hidden','true');
+
+}
+
+
+</script>
+    
+</body>
+</html>

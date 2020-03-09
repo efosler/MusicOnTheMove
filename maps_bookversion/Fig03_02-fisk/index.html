@@ -1,0 +1,357 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Music on the Move: The Fisk Jubilee Singers, 1871-1880</title>
+<!--
+The Fisk Jubilee Singers, 1871-1880 Map
+CC-BY-NC 4.0
+Eric Fosler-Lussier, The Ohio State University
+for the book, "Music on the Move" by Danielle Fosler-Lussier, U. Michigan Press, 2020.
+
+This map, based on an original map by Elizabeth Lacy and Louis Epstein, 
+chronicles concerts given by The Fisk Jubilee Singers from 1871 to 1880.   
+This was just the first of many Jubilee groups that toured during this period.
+
+Map tiles were created by Eric Fosler-Lussier from Natural Earth data and are available under a CC0 license to all.
+-->
+
+    
+    <style type="text/css">
+        html { height: 100% }
+        body { height: 100%; margin: 0; padding: 0 }
+        #map-canvas { height: 100% }
+        .concert {
+            max-width: 350px;
+        }
+        .concertline {
+            word-wrap: break-word;
+        }
+        .concertdate {
+            font-weight: bold;
+        }
+        .concertcitation {
+            font-style: italic;
+        }
+        .concertdescription {
+            font-style: italic;
+            word-wrap: normal;
+            padding-left: 10px;
+        }
+        .settings {
+          position: absolute;
+          right: 10px;
+          top:6px;
+          z-index: 1000;
+        }
+        .legend {
+            line-height: 18px;
+            color: #555;
+            opacity: 0.8;
+        }
+        .legend i {
+            width: 20px;
+            height: 18px;
+            float: left;
+            margin-right: 8px;
+            opacity: 1;
+        }
+
+        .box {
+            border: 1px solid #EEE;
+            margin: 3px;
+            padding: 5px;
+            background-color: white;
+            font-family: sans-serif;
+            font-size: 12px;
+            z-index: 10000;
+        }
+        .title {
+            font-weight: 600;
+        }
+        .source {
+            position: absolute;
+            width: 50%;
+            top: 6px;
+            left: 50px;
+            display: none;
+        }
+        .bibliography {
+            position: absolute;
+            max-width: 50%;
+            bottom: 20px;
+            left: 10px;
+        }
+        .icon {
+            border: 0;
+            background: none;
+        }
+        
+        .icon {
+            color: white;
+            line-height: 15px;
+            text-align: center;
+            padding: 1px;
+        }
+        .icon1871 {
+            background: #01bb6e;
+        }
+        .icon1872 {
+            background: #07b174;
+        }
+        .icon1873 {
+            background: #0ea87a;
+        }
+        .icon1875 {
+            background: #149f80;
+        }
+        .icon1877 {
+            background: #1b9686;
+        }
+        .icon1878 {
+            background: #228d8c;
+        }
+        .icon1879 {
+            background: #288492;
+        }
+        .icon1880 {
+            background: #2f7b98;
+        }
+        .icon1881 {
+            background: #36729e;
+        }
+    
+        .fas {
+            opacity: 0.9;
+        }
+        .legend-cluster {
+            height:20px;
+            width:20px;
+            border-radius: 50%;
+            display: inline-block;
+            text-align: center;
+        }
+    </style>
+    <link href="leaflet.css" rel="stylesheet" type="text/css" />
+    <style>
+        .leaflet-tooltip {
+            white-space: normal;
+            width: 350px;
+        }
+    </style>
+    <link href="MarkerCluster.css" rel="stylesheet" type="text/css" />
+    <link href="MarkerCluster.Default.css" rel="stylesheet" type="text/css" />
+    <!-- override color defaults -->
+    <style>
+       .marker-cluster-small {
+	        background-color: rgba(241, 211, 87, 0.6);
+	    }
+        .marker-cluster-small div {
+	        background-color: rgba(240, 194, 12, 0.6);
+	    }
+ 
+    </style>
+
+    <link rel="stylesheet" href="all.css" type="text/css" />
+    <meta http-equiv="X-UA-Compatible" content="IE=Edge">
+
+</head>
+<body>
+  <div id="map-canvas"></div>
+  <form class="settings">
+        <div class="box">
+            <div class="title">Years</div>
+            <div id="slider"></div>
+            <input type="checkbox" id="use_clusters" checked><label>&nbsp;Use marker clusters</label>
+        </div>
+    </form>
+  <div class="source box">
+    <div class="title">Music on the Move: The Fisk Jubilee Singers, 1871-1880</div>
+    This map, based on an <a href="https://stolaf.maps.arcgis.com/apps/View/index.html?appid=0526343140204159b055648842a58dc1&extent=-159.4446,-15.6852,91.9226,73.9532">original map by Elizabeth Lacy and Louis Epstein</a>, 
+    chronicles concerts given by The Fisk Jubilee Singers from 1871 to 1880.   This was just the first of many Jubilee groups that toured during this period.
+
+  </div>
+  <div class="bibliography box">
+    <div id="bibtitle" class="title"><a href="#" onclick="expandbib()">Bibliography (expand)</a></div>
+    <ul id="biblist" hidden>
+        <li> Toni Passmore Anderson, "The Fisk Jubilee Singers: Performing Ambassadors for the Survival of an American Treasure, 1871-1878" (PhD diss., Georgia State University, 1997). </li>
+        <li>Tim Brooks and Richard K. Spottswood, <i>Lost Sounds: Blacks and the Birth of the Recording Industry, 1890-1919</i> (Champaign: University of Illinois Press, 2010).</li>
+        <li>Sandra Jean Graham, <i>Spirituals and the Birth of a Black Entertainment Industry</i> (Urbana: University of Illinois Press, 2018).</li>
+        <li>Sandra Jean Graham, "The Fisk Jubilee Singers and the Concert Spiritual: The Beginnings of an American Tradition" (PhD diss., New York University, 2001).</li>
+        <li>Gustavus D. Pike, <i>The Jubilee Singers: and their campaign for twenty thousand dollars</i> (Boston: Lee and Shepard, 1873).</li>
+        <li>Doug Seroff, "'A Voice in the Wilderness': The Fisk Jubilee Singers' Civil Rights Tours of 1879-1882." Popular Music and Society, 25 (2001): 131-177.</li>
+        <li>Eileen Southern, <i>The Music of Black Americans: A History</i> (New York: Norton, 1971).</li>
+        <li>Andrew Ward, <i>Dark Midnight When I Rise: The Story of the Jubilee Singers, Who Introduced the World to the Music of Black America</i> (New York : Farrar, Straus, and Giroux, 2000).</li>
+    </ul>
+  </div>
+
+  <!-- the following are polyfill for older browsers not implementing fetch/promise-->
+<script src="polyfill.min.js"></script>
+<script src="fetch.umd.js"></script>
+<!-- -->
+
+   
+<script src="leaflet.js"></script>
+<script src="d3.v5.min.js"></script>
+<!--<script src="https://cdnjs.cloudflare.com/ajax/libs/d3/3.4.9/d3.min.js"></script>-->
+<script src="d3-tip.min.js"></script>
+<script src="leaflet.markercluster.js"></script>
+<!--
+<script src="L.D3SvgOverlay.min.js"></script>
+-->
+<script src="d3-simple-slider.min.js"></script>
+<script>
+
+var map = L.map("map-canvas", {center: [40.847,-32.519], zoom: 3, maxZoom: 6});
+map.fitBounds([[23,-100], [55,35]])
+var tiles = L.tileLayer('geography-gray-web/{z}/{x}/{y}.png', {
+    tms: true, 
+    attribution:  
+            '<a href="https://stolaf.maps.arcgis.com/apps/View/index.html?appid=0526343140204159b055648842a58dc1&extent=-159.4446,-15.6852,91.9226,73.9532/">Original map Elizabeth Lacy, Louis Epstein</a>, data used by permission | '+
+            'Map tiles by E. Fosler-Lussier, made with <a href="https://www.naturalearthdata.com">Natural Earth</a>.'});
+tiles.addTo(map);
+//var nameLayer= L.tileLayer('geography-gray-countries/{z}/{x}/{y}.png', {tms: true}).setOpacity(0.3).addTo(map);
+
+var markerClusters = L.markerClusterGroup({
+    maxClusterRadius: 30
+    }).addTo(map);
+
+
+iconmap = {
+    1871: '71',
+    1872: '72',
+    1873: '73',
+    1875: '75',
+    1877: '77',
+    1878: '78',
+    1879: '79',
+    1880: '80',
+    1881: '81'
+}
+
+
+var datemap={};
+var markers={};
+for(date in iconmap) {
+    datemap[date]=L.divIcon({className:'icon icon'+date, html:iconmap[date], iconSize:[15,15]});
+    markers[date]=[];
+}
+var minyear=d3.min(Object.keys(markers));
+var maxyear=d3.max(Object.keys(markers));
+
+var iconLocs={};
+
+d3.csv('fisk.csv').then(function(data) {
+    data.forEach(function(d) {
+        var label="<div class='concert'><div class='concertline'><span class='concertdate'>"+d["Concert Date"]+":</span>&nbsp;<span class='concertvenue'>";
+        if (d.Venue == "Unknown") {
+            label+="Unknown venue"
+        } else {
+            label+=String(d.Venue);
+        }
+        label+=",</span>&nbsp;<span class='concertcity'>"+d.City+"</span>&nbsp;<span class='concertcitation'>("+d.Citation+")</span></div>"
+        if (d.Description != "") {
+            label+="<div class='concertdescription'>"+d.Description+"</div>";
+        }
+        //        var icon=L.divIcon({className:'icon',html:'<i class="fas fa-certificate icongreen fa-lg"></i>',size:[20,20]})
+        var year=d['Concert Date'].substring(0,4);
+        // add small random perturbation so that the labels don't overlap in non-cluster mode
+        var currentLoc=[parseFloat(d.Latitude),parseFloat(d.Longitude)];
+        while (currentLoc in iconLocs) {
+            currentLoc=[currentLoc[0]+0.05,currentLoc[1]-0.05];
+        }
+        iconLocs[currentLoc]=1;
+
+        m=L.marker(currentLoc,{icon: datemap[year]})
+            .bindTooltip(label)
+            .addTo(markerClusters);
+        markers[year].push(m);
+    });
+});
+
+
+
+var legend = L.control({position: 'bottomright'});
+
+legend.onAdd = function (map) {
+
+    var div = L.DomUtil.create('div', 'info legend box');
+    
+    var dates=Object.keys(iconmap);
+    // loop through our density intervals and generate a label with a colored square for each interval
+    dates.sort().forEach(function(d) {
+        div.innerHTML += "<span class='icon icon"+d+"'>" + iconmap[d] + "</span> " + d+ " performance<br/>";
+    })
+    div.innerHTML += "<span class='marker-cluster-small legend-cluster'>#</span> Cluster with # performances <br/>"
+    
+    return div;
+};
+
+legend.addTo(map);
+
+d3.select("#use_clusters").on("change", function() {
+    onSlider([minyear,maxyear]);
+});
+
+var slider = d3
+    .sliderHorizontal()
+    .min(minyear)
+    .max(maxyear)
+    .step(1)
+    .ticks(11)
+    .tickFormat(d3.format('4d'))
+    .width(300)
+    .default([minyear,maxyear])
+    .fill('#2196f3')
+    .displayValue(true)
+    .on('onchange', function(val){
+	    onSlider(val);
+	});
+
+d3.select('#slider')
+    .append('svg')
+    .attr('width',360)
+    .attr('height', 80)
+    .append('g')
+    .attr('transform', 'translate(30,30)')
+    .call(slider);
+
+function onSlider(val) {
+    minyear=val[0];
+    maxyear=val[1];
+
+    for (mset in markers) {
+        markers[mset].forEach(function(m) { m.remove(); });
+        markerClusters.clearLayers();
+    }
+    if (d3.select("#use_clusters").property("checked")) {
+        markerClusters.addTo(map);
+        for (mset in markers) {
+            if (mset >= minyear && mset <= maxyear) {
+                markers[mset].forEach(function(m) { m.addTo(markerClusters);});
+            }
+        } 
+        markerClusters.refreshClusters();
+    } else {
+        markerClusters.remove();
+        for (mset in markers) {
+            if (mset >= minyear && mset <= maxyear) {
+                markers[mset].forEach(function(m) { m.addTo(map);});
+            }
+        } 
+    }
+}
+
+function expandbib() {
+    d3.select('#bibtitle').html('<a href="#" onclick="collapsebib()">Bibliography (collapse)</a>');
+    d3.select('#biblist').attr('hidden',null);
+}
+function collapsebib() {
+    d3.select('#bibtitle').html('<a href="#" onclick="expandbib()">Bibliography (expand)</a>');
+    d3.select('#biblist').attr('hidden','true');
+
+}
+
+</script>
+    
+</body>
+</html>

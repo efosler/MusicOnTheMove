@@ -1,0 +1,305 @@
+<html>
+<head>
+<meta charset="utf-8">
+<title>Music on the Move: Migration of the Romani People into Europe</title>
+<!--
+Trans-Atlantic Slave Voyages Map
+CC-BY-NC 4.0
+Eric Fosler-Lussier, The Ohio State University
+for the book, "Music on the Move" by Danielle Fosler-Lussier, U. Michigan Press, 2020.
+
+This map illustrates the migration of Romani people into Europe. 
+The dates given represent the first documented reports of Romani people in each place, 
+following Lev Tcherenkov and Stéphane Laederich, The Rroma, vol. 1 (Basel: Schwabe Verlag, 2004), 83. 
+The design of this map draws on a map formerly posted at ww.eliznik.org.uk
+
+Map tiles were created by Eric Fosler-Lussier from Natural Earth data and are available under a CC0 license to all.
+-->
+<!-- leaflet version 1.4.0-->
+<link rel="stylesheet" href="leaflet.css" />
+<!-- jquery-ui version 1.9.2-->
+<link rel="stylesheet" href="jquery-ui.css" type="text/css"/>
+<link rel="stylesheet" href="motm.css" tpe="text/css"/>
+<link href="MarkerCluster.css" rel='stylesheet' type='text/css'/>
+<link href="MarkerCluster.Default.css" rel='stylesheet' type='text/css'/>
+<style>
+    html { height: 100%; }
+    body { height: 100%; margin: 0; padding: 0  }
+    #map { height: 100% }
+    .box {
+        border: 1px solid #EEE;
+        margin: 3px;
+        padding: 5px;
+        background-color: white;
+        font-family: sans-serif;
+        font-size: 12px;
+        z-index: 1000;
+    }
+    .title {
+        font-weight: 600;
+    }
+    .source {
+        position: absolute;
+        width: 50%;
+        top: 6px;
+        left: 50px;
+    }
+    .dateIconGreen { background: green; text-align: center; line-height: 20px; color: white }
+    .dateIconBlue { background: blue; text-align: center; line-height: 20px; color: white }
+    .dateIconRed { background: red; text-align: center; line-height: 20px; color: white }
+    .dateIconPurple { background: purple; text-align: center; line-height: 20px; color: white }
+    .dateIconMagenta { background: magenta; text-align: center; line-height: 20px; color: white }
+    .dateIconBlue { background: blue; text-align: center; line-height: 20px; color: white }
+</style>
+</head>
+<body>
+<div id="map"></div>
+<div class="source box">
+    <div class="title">Music on the Move: Migration of the Romani People into Europe</div>
+    Music on the Move: Migration of Romani people into Europe
+This map illustrates the migration of Romani people into Europe. The dates given represent the first documented reports of Romani people in each place, following Lev Tcherenkov and Stéphane Laederich, The Rroma, vol. 1 (Basel: Schwabe Verlag, 2004), 83. The design of this map draws on a map formerly posted at <a href="www.eliznik.org.uk">www.eliznik.org.uk</a>.
+</div>
+<form class="slidersettings">
+<div class="box">
+    <div class="title">Century</div>
+    <div id="slider"></div>
+  </div>
+</form>
+
+<!-- javascript versions
+    webanimations  2.3.1
+    leaflet  1.4.0
+    leaflet polylineDecorator 1.1.0
+    jquery 1.9.1
+    jquery-ui 1.9.2
+    jquery-ui-touch-punch 0.2.2
+    d3 v5
+    d3-simple-slider
+    leaflet markercluster 1.4.1
+    leaflet curve (personalized)
+-->
+<script src="web-animations.min.js"></script>
+<script src="leaflet.js"></script>
+<script src="leaflet.polylineDecorator.min.js"></script>
+<script src="jquery-1.9.1.min.js"></script>
+<script src="jquery-ui.js"></script>
+<script src="jquery.ui.touch-punch.min.js"></script>
+<script src="d3.v5.min.js"></script>
+<script src="d3-simple-slider.min.js"></script>
+<script src="leaflet.markercluster.js"></script>
+<script src="leaflet.curve.js"></script>
+
+<script>
+//set up map
+//var map = L.map('map').setView([46.05, 11.05], 5);
+var map=L.map('map').setView([50.373,21.489],5).setMaxZoom(6)
+L.tileLayer('geography-gray-web/{z}/{x}/{y}.png', {tms: true, attribution: 'Dates: Tcherenkov and Laederich | Paths: <a href="www.eliznik.org.uk">www.eliznik.org.uk</a> | Map tiles: E. Fosler-Lussier | Made with <a href="https://www.naturalearthdata.com">Natural Earth</a>'}).addTo(map);
+
+var layerorder=["green", "blue", "purple", "magenta", "red"];
+
+var layerAttributes={
+    green: {color:'green', time: "12th"},
+    blue: {color:'blue', dashArray:'10 10', time: "Early 14th"},
+    purple: {color:'purple', dashArray:'5 5', time: "Late 14th"},
+    magenta: {color:'magenta', dashArray:'2 5', time: "Early 15th"},
+    red: {color:'red', dashArray:'10 5 2 5', time: "16th"}
+}
+
+var layers={};
+var iconLayers={};
+for (var l in layerAttributes) {
+    layers[l]=L.layerGroup([],{time: layerAttributes[l].time});
+    //iconLayers[l]=L.layerGroup([]).addTo(layers[l]);
+    iconLayers[l]=L.markerClusterGroup({
+        maxClusterRadius: 40,
+        iconCreateFunction: function(cluster) {
+            var mks=cluster.getAllChildMarkers();
+            var regex=/[^0-9]/gi;
+            var mks_dates=mks.map(
+                function(e) {return e.options.icon.options.html;}
+            ).sort(
+                function(a,b) {return parseInt(a.replace(regex,''))-parseInt(b.replace(regex,''))}
+            )
+            var daterange=mks_dates[0];
+            if (daterange != mks_dates[mks_dates.length-1]) {
+                daterange += "-" + mks_dates[mks_dates.length-1];
+            }
+		    return L.divIcon({ html: daterange,
+                                iconSize: [daterange.length*5+20,20],
+                                className: mks[0].options.icon.options.className});
+	    }
+    }).addTo(layers[l]);
+}
+
+var centuryFormat=function(index) {
+    return layerAttributes[layerorder[index]].time;
+}
+
+sliderSize=300
+if (map.getSize().x < 800) {
+    sliderSize=250
+}
+var slider = d3
+    .sliderHorizontal()
+    .min(0)
+    .max(4)
+    .step(1)
+    .ticks(5)
+    .tickFormat(centuryFormat)
+    .width(sliderSize*5/6)
+    .displayValue(true)
+    .on('end', function(val){
+	    onSlider(val);
+	});
+
+d3.select('#slider')
+    .append('svg')
+    .attr('width', sliderSize)
+    .attr('height', 80)
+    .append('g')
+    .attr('transform', 'translate(30,30)')
+    .call(slider);
+
+function onSlider(val) {
+    for(var i=0; i<=val; i++) {
+        layers[layerorder[i]].addTo(map);
+    }
+    for(var i=val+1;i<layerorder.length;i++) {
+        layers[layerorder[i]].remove();
+    }
+}
+
+onSlider(0);
+
+function addCurve(curvePath, curveAttributes, curveLayer) {
+    if (curvePath.length <= 2) {
+	    return;
+    }
+    penultimate=curvePath[curvePath.length-2];
+    ultimate=curvePath[curvePath.length-1];
+
+    instructions=['M',curvePath.shift()];
+    if (curvePath.length == 4) {
+	    instructions.push('C');
+	    instructions.push(curvePath.shift());
+	    instructions.push(curvePath.shift());
+	    c=curvePath.shift();
+	    instructions.push(c);
+	    instructions.push('S');
+	    instructions.push(c);
+	    instructions.push(curvePath.shift());
+    } else if (curvePath.length >= 3) {
+	    instructions.push('C');
+        instructions.push(curvePath.shift());
+        instructions.push(curvePath.shift());
+        instructions.push(curvePath.shift());
+    } else if (curvePath.length == 2) {
+        instructions.push('Q');
+        instructions.push(curvePath.shift());
+        instructions.push(curvePath.shift());
+    } else if (curvePath.length == 1) {
+        instructions.push('L');
+        instructions.push(curvePath.shift());
+    }
+	    
+    while(curvePath.length > 0) {
+        if (curvePath.length >= 2) {
+            instructions.push('S');
+            instructions.push(curvePath.shift());
+            instructions.push(curvePath.shift());
+        } else {
+            instructions.push('T');
+            instructions.push(curvePath.shift());
+        }
+    }	    
+
+
+    L.curve(instructions,curveAttributes).addTo(curveLayer);
+    L.polylineDecorator([penultimate,ultimate], { patterns: [ {offset:'100%', repeat: 0, symbol: L.Symbol.arrowHead({pixelSize: 10, polygon: false, pathOptions: {stroke: true, color: curveAttributes['color']}})}]}).addTo(curveLayer);
+    
+}
+
+function addDate(location,date,color,layer) {
+    return  L.marker(location,{icon: L.divIcon({className: "dateIcon"+color, html: date, iconSize: [40, 20]})}).addTo(layer)
+}
+
+
+
+arrowLayers=L.featureGroup([layers['green'],layers['blue'],layers['purple'],layers['magenta'],layers['red']]);
+
+addCurve([[36.456636, 47.988281],[39.909736, 37.792969], [39.232253, 30.058594]],layerAttributes['green'],layers['green']);
+addDate([41.178653972331674, 29.003906250000004],"1050?","Green",iconLayers['green']);
+addDate([41.409775832009565, 27.114257812500004],"~1200","Green",iconLayers['green']);
+
+addCurve([[41.3108238809182, 26.400146484375004],[41.40153558289848, 23.334960937500004], [39.19820534889482, 21.884765625]],layerAttributes['blue'],layers['blue']);
+addCurve([[41.3108238809182, 26.400146484375004],[41.40153558289848, 23.334960937500004], [43.35713822211053, 21.1376953125]],layerAttributes['blue'],layers['blue']);
+
+addDate([38.92744844566012, 21.796875000000004],"1348","Blue",iconLayers['blue']);
+addDate([35.28150065789119, 23.686523437500004],"1322","Blue",iconLayers['blue']);
+addDate([42.68243539838623, 25.8837890625],"1323","Blue",iconLayers['blue']);
+
+addCurve([[38.92522904714054,21.928710937500004],[36.98500309285596, 22.32421875],[35.137879119634185, 25.0927734375]],layerAttributes['purple'],layers['purple']);
+addCurve([[43.54854811091288,20.917968750000004],[43.48481212891603,19.511718750000004],[42.65012181368025,19.072265625000004]],layerAttributes['purple'],layers['purple']);
+addCurve([[41.825794392587724,26.320590823888782],[44.51728521284206,25.353793948888782],[45.20257089792178,21.92605957388878],[47.14977041135847,19.816684573888782]],layerAttributes['purple'],layers['purple']);
+addCurve([[41.825794392587724,26.320590823888782],[44.14005544839749,25.529575198888782],[45.69583747424483,28.166293948888782],[47.29899295370425,28.210239261388782]],layerAttributes['purple'],layers['purple']);
+
+addDate([38.10, 21.10],"1386","Purple",iconLayers['purple']);
+addDate([44.1842497887437, 25.620117187500004],"1385","Purple",iconLayers['purple']);
+addDate([36.4566360115962, 22.434082031250004],"1384","Purple",iconLayers['purple']);
+addDate([42.22851735620852, 18.940429687500004],"1362","Purple",iconLayers['purple']);
+
+addCurve([[47.477505668359655,19.640903323888782],[48.30257875042703,17.575473636388782],[49.544118230970525,17.004184573888782]],layerAttributes['magenta'],layers['magenta']);
+addCurve([[47.477505668359655,19.640903323888782],[48.62312144074374,17.136020511388782],[49.34410916322118,14.19168457388878],[51.05971073903984,13.180942386388779]],layerAttributes['magenta'],layers['magenta']);
+addCurve([[47.29413372501023,18.940429687500004],[48.23930899024907,15.468750000000002],[48.38544219115486,12.150878906250002]],layerAttributes['magenta'],layers['magenta']);
+addCurve([[45.598665689820635,16.149902343750004],[46.255846818480336,12.01904296875],[44.4808302785626,9.909667968750002],[42.09822241118974,13.051757812500002]],layerAttributes['magenta'],layers['magenta']);
+addCurve([[48.22467264956519,10.898437500000002],[47.2195681123155,4.482421875000001],[42.61779143282346,1.5820312500000002],[40.38002840251183,-2.8125]],layerAttributes['magenta'],layers['magenta']);
+addCurve([[48.3416461723746,10.854492187500002],[48.48748647988415,5.9326171875],[49.095452162534826,2.8125]],layerAttributes['magenta'],layers['magenta']);
+addCurve([[49.724479188712984,2.9443359375],[51.781435604431195,5.229492187500001],[53.067626642387374,8.964843750000002]],layerAttributes['magenta'],layers['magenta']);
+
+addDate([45.32897866218559, 27.960205078125004],"1416","Magenta",iconLayers['magenta']);
+addDate([48.554835513566056, 18.578125000000004],"1402","Magenta",iconLayers['magenta']);
+
+addCurve([[49.83798245308486,2.0654296875000004],[53.330872983017066,-2.7685546875000004],[59.57885104663189,-8.217773437500002],[56.29215668507645,9.052734375000002]],layerAttributes['red'],layers['red']);
+addCurve([[57.136239319177434,-2.8125],[59.085738569819505,0.17578125],[59.40036514079251,7.119140625]],layerAttributes['red'],layers['red']);
+addCurve([[56.29215668507645,9.799804687500002],[56.63206372054477,12.1728515625],[57.961503094284794,13.095703125]],layerAttributes['red'],layers['red']);
+addCurve([[48.10743118848039,27.070312500000004],[53.9560855309879,13.974609375000002],[55.875310835696816,24.082031250000004],[55.727110085045986,36.56250000000001]],layerAttributes['red'],layers['red']);
+addCurve([[54.59763114642435,23.180929463705983],[56.56026854102801,25.618334147147838],[60.43624610417983,24.387865397147838]],layerAttributes['red'],layers['red']);
+addCurve([[47.9908763145294,28.34294352214784],[48.778852736280506,30.276537272147838],[49.24005214643655,32.122240397147834]],layerAttributes['red'],layers['red']);
+
+addDate([58.034393220043285, 15.732421875000002], "1512", "Red", iconLayers['red']);
+addDate([51.9731032972634, -0.26367187500000006], "1513", "Red", iconLayers['red']);
+addDate([53.324008332129665, -2.6806640625], "1505", "Red", iconLayers['red']);
+addDate([48.28319289548349,30.717773437500004], "1501","Red",iconLayers["red"]);
+
+addDate([47.90161354142077,27.729492187500004], "1428","Magenta",iconLayers["magenta"]);
+addDate([50.14874640066278,25.2685546875], "1444","Magenta",iconLayers["magenta"]);
+addDate([48.42920055556841,19.599609375000004], "1423","Magenta",iconLayers["magenta"]);
+addDate([49.210420445650286,16.369628906250004], "1242?","Blue",iconLayers["blue"]);
+addDate([49.79544988802771,11.206054687500002], "1418","Magenta",iconLayers["magenta"]);
+addDate([43.46886761482925,12.810058593750002], "1422","Magenta",iconLayers["magenta"]);
+addDate([50.499452103967734,7.954101562500001], "1418","Magenta",iconLayers["magenta"]);
+addDate([51.49506473014368,12.94189453125], "1417","Magenta",iconLayers["magenta"]);
+addDate([53.1072166918934,10.195312500000002], "1407","Magenta",iconLayers["magenta"]);
+addDate([53.839563678833606,12.766113281250002], "1417","Magenta",iconLayers["magenta"]);
+addDate([51.12421275782688,4.625244140625001], "1420","Magenta",iconLayers["magenta"]);
+addDate([51.048301133312265,3.3178710937500004], "1421","Magenta",iconLayers["magenta"]);
+addDate([50.708634400828224,1.9555664062500002], "1421","Magenta",iconLayers["magenta"]);
+addDate([49.37522008143603,2.2741699218750004], "1427","Magenta",iconLayers["magenta"]);
+addDate([47.48008846346322,5.020751953125], "1419","Magenta",iconLayers["magenta"]);
+addDate([46.34692761055676,0.8239746093750001], "1436","Magenta",iconLayers["magenta"]);
+addDate([43.52465500687188,2.6916503906250004], "1415","Magenta",iconLayers["magenta"]);
+addDate([42.18782901059085,-0.6921386718750001], "1425","Magenta",iconLayers["magenta"]);
+addDate([37.77071473849611,-5.229492187500001], "1462","Red",iconLayers["red"]);
+addDate([45.706179285330855,7.514648437500001], "1419","Magenta",iconLayers["magenta"]);
+addDate([48.516604348867475,8.876953125000002], "1418","Magenta",iconLayers["magenta"]);
+addDate([47.60616304386874,11.381835937500002], "1413","Magenta",iconLayers["magenta"]);
+addDate([53.80065082633023,25.444335937500004], "1501","Red",iconLayers["red"]);
+addDate([56.63206372054477,-3.4716796875000004], "1505","Red",iconLayers["red"]);
+addDate([60.673178565817715,25.488281250000004], "1540","Red",iconLayers["red"]);
+addDate([60.88770004207789,23.115234375], "1505?","Red",iconLayers["red"]);
+
+map.fitBounds([[35,-6],[62,49]])
+
+</script>
+</body>
+</html>

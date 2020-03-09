@@ -1,0 +1,254 @@
+<html>
+<head>
+<meta charset="utf-8">
+<title>Music on the Move: Trading Area of the Dutch East India Company</title>
+<!--
+Trading Area of the Dutch East India Company Map
+CC-BY-NC 4.0
+Eric Fosler-Lussier, The Ohio State University
+for the book, "Music on the Move" by Danielle Fosler-Lussier, U. Michigan Press, 2020.
+
+Trading area assigned to the Dutch East India Company by the Dutch government. 
+After Femme S. Gaastra, The Dutch East India Company: Expansion and Decline< (Leiden: Walburg Pers, 2003), 42.
+
+Map tiles were created by Eric Fosler-Lussier from Natural Earth data and are available under a CC0 license to all.
+-->
+
+<link rel="stylesheet" href="leaflet.css" />
+<link rel="stylesheet" href="motm.css"/>
+</head>
+<body>
+<div id="map"></div>
+
+<div class="source box">
+    <div class="title">Music on the Move: Trading Area of the Dutch East India Company</div>
+    Trading area assigned to the Dutch East India Company by the Dutch government. After Femme S. Gaastra, <i>The Dutch East India Company: Expansion and Decline</i> (Leiden: Walburg Pers, 2003), 42.
+</div>
+
+<script src="leaflet.js"></script>
+<script src="jquery-1.9.1.min.js"></script>
+
+<script>
+//set up map
+var map = L.map('map').setView([14, 90], 4).setMaxZoom(6);
+// first tile layer here are the country boundary tiles, second is the country names.
+L.tileLayer('geography-gray-web/{z}/{x}/{y}.png', {
+    tms: true, 
+    zIndex: 1, 
+    attribution: 'Data from F. S. Gaastra, "The Dutch East India Company: Expansion and Decline" (Leiden: Walburg Pers, 2003) | Map tiles by E. Fosler-Lussier | Made with <a href="https://www.naturalearthdata.com">Natural Earth</a>'
+    }).addTo(map);
+
+
+dutchEastCities=[
+{ 
+    "country": "YE",
+    "name": "Mocha",
+    "lat": "13.316667",
+    "lng": "43.25",
+    "direction": "right"
+},{
+    "country": "IQ",
+    "name": "Basra",
+    "lat": "30.5",
+    "lng": "47.816667",
+    "direction": "right"
+}, {
+    "country": "IR",
+    "name": "Bandar Abbas (Gombroon)",
+    "lat": "27.183333",
+    "lng": "56.266667",
+    "direction": "right"
+}, {    
+    "country": "IN",
+    "name": "Agra",
+    "lat": "27.18",
+    "lng": "78.02",
+    "direction": "right"
+},{
+    "country": "IN",
+    "name": "Surat",
+    "lat": "21.17024",
+    "lng": "72.831061",
+    "direction": "right"
+},{
+    "country": "IN",
+    "name": "Kochi (Cochin)",
+    "lat": "9.97",
+    "lng": "76.28",
+    "direction": "left"
+},{
+    "country": "IN",
+    "name": "Nagapattinam (Negapatam)",
+    "lat": "10.77",
+    "lng": "79.83",
+    "direction": "right"
+},{
+    "country": "VN",
+    "name": "Hanoi (Tonkin)",
+    "lat": "21.028333",
+    "lng": "105.854167",
+    "direction": "left"
+},{
+    "country": "CN",
+    "name": "Macau (Macao)",
+    "lat": "22.166667",
+    "lng": "113.55",
+    "direction": "right"
+},{
+    "country": "CN",
+    "name": "Guangzhou (Canton)",
+    "lat": "23.132",
+    "lng": "113.266",
+    "direction": "top"
+},{
+    "country": "PH",
+    "name": "Manila",
+    "lat": "14.6042",
+    "lng": "120.9822",
+    "direction": "left"
+},{
+    "country": "MY",
+    "name": "Pangkor Island (Perak)",
+    "lat": "4.22",
+    "lng": "100.555",
+    "direction": "top"
+},{
+    "country": "MY",
+    "name": "Malacca",
+    "lat": "2.196",
+    "lng": "102.2405",
+    "direction": "right"
+},{
+    "country": "ID",
+    "name": "Padang",
+    "lat": "-0.95",
+    "lng": "100.353056",
+    "direction": "left"
+},{
+    "country": "ID",
+    "name": "Jambi",
+    "lat": "-1.583333",
+    "lng": "103.616667",
+    "direction": "right"
+},{
+    "country": "ID",
+    "name": "Palembang",
+    "lat": "-2.986111",
+    "lng": "104.755556",
+    "direction": "bottom"
+},{
+    "country": "ID",
+    "name": "Jakarta (Batavia)",
+    "lat": "-6.1864",
+    "lng": "106.8294",
+    "direction": "bottom"
+},{
+    "country": "ID",
+    "name": "Pontianak",
+    "lat": "-0.020556",
+    "lng": "109.341389",
+    "direction": "right"
+},{
+    "country": "ID",
+    "name": "Makassar (Macassar)",
+    "lat": "-5.133056",
+    "lng": "119.413611",
+    "direction": "bottom"
+},{
+    "country": "ID",
+    "name": "Ambon",
+    "lat": "-3.7",
+    "lng": "128.166667",
+    "direction": "left"
+},{
+    "country": "ID",
+    "name": "Banda Islands",
+    "lat": "-4.583333",
+    "lng": "129.916667",
+    "direction": "right"
+},{
+    "country": "CN",
+    "name": "Beijing (Peking)",
+    "lat": "39.9075",
+    "lng": "116.39723",
+    "direction": "below"
+},{
+    "country": "JP",
+    "name": "Dejima (Deshima)",
+    "lat": "32.74352",
+    "lng": "129.87302",
+    "direction": "left"
+}
+]
+
+var dEC_geojson = {
+    "type": "FeatureCollection",
+    "name": "Dutch-East-India-Company-Cities",
+    "features": []
+};
+
+// create a GeoJSON structure that is compatible with Leaflet
+dutchEastCities.forEach(function (city) {
+    dEC_geojson["features"].push({"type": "Feature",
+				"properties": {"name": city["name"],"direction": city["direction"]},
+				"geometry": {"type": "Point", "coordinates": [ city["lng"], city["lat"] ]} });
+});
+
+var markerGroup = new L.featureGroup([]);
+
+L.geoJSON(dEC_geojson, {
+  pointToLayer: function(feature, latlng) {
+      label=String(feature.properties.name);
+      return new L.CircleMarker(latlng, {radius: 1}).bindTooltip(label, {permanent: true, opacity: 0.9, direction: feature.properties.direction}).openTooltip();
+  }
+}).addTo(map).addTo(markerGroup);
+
+//map.fitBounds(markerGroup.getBounds());
+map.fitBounds([[-6.5,43],[40.5,135]])
+setFontSizes();
+
+function setFontSizes(newZoomLevel=undefined,newFontSize=undefined) {
+    // zoom 3 px 800 8
+    // zoom 4 px 800 12
+    // zoom 5 px 800 16
+    // zoom 6 px 800 20
+    // zoom 3 px 1366 10
+    // zoom 4 px 1366 16
+    // zoom 5 px 1366 20
+    // zoom 6 px 1366 24
+    // zoom 3 px 1023 9
+    // zoom 4 px 1023 14
+    // zoom 5 px 1023 18
+    // zoom 6 px 1023 22
+
+    //var zoomLevel = map.getZoom();
+    if (newZoomLevel==undefined) {
+        newZoomLevel = map.getZoom();
+    }
+    var containerSize = map.getSize();
+
+    // based on linear regression, best model looks like
+    //    4.3*zoom + 0.0061*containerSize.x - 10.1
+    newFontSize=0.47*newZoomLevel*newZoomLevel + 0.0061*containerSize.x - 0.8;
+    _setFontSize(newFontSize);
+    return undefined;
+    
+}
+function _setFontSize(size) {
+    var tooltip = $('.leaflet-tooltip');
+    tooltip.css('font-size',size);
+    Object.values(markerGroup._layers).forEach(function(e1) {
+        Object.values(e1._layers).forEach(function(e2) {
+            e2.getTooltip()._updatePosition();
+        })
+    });
+}
+
+map.on('viewreset', function (e) {
+    setFontSizes();
+});
+
+
+</script>
+</body>
+</html>

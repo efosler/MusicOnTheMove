@@ -1,0 +1,248 @@
+<!DOCTYPE html>
+<meta charset="utf-8">
+
+<html>
+<head>
+    <title>Music on the Move: Internet Usage Rates By Region, 2018</title>
+    <!--
+Internet Usage Rates By Region, 2018 Map
+CC-BY-NC 4.0
+Eric Fosler-Lussier, The Ohio State University
+for the book, "Music on the Move" by Danielle Fosler-Lussier, U. Michigan Press, 2020.
+
+This map shows the percentage of people in each region estimated to have Internet access 
+(broadband, mobile, or dial up) in June 2018. 
+Data from www.internetworldstats.com.
+
+Map tiles were created by Eric Fosler-Lussier from Natural Earth data and are available under a CC0 license to all.
+-->
+
+    <style type="text/css">
+        html { height: 100% }
+        body { height: 100%; margin: 0; padding: 0 }
+        #map-canvas { height: 100% }
+        .settings {
+          position: absolute;
+          right: 10px;
+          top:6px;
+          z-index: 1000;
+        }
+        .legend {
+            line-height: 18px;
+            color: #555;
+            opacity: 0.8;
+        }
+        .legend i {
+            width: 20px;
+            height: 18px;
+            float: left;
+            margin-right: 8px;
+            opacity: 1;
+        }
+
+        .box {
+            border: 1px solid #EEE;
+            margin: 3px;
+            padding: 5px;
+            background-color: white;
+            font-family: sans-serif;
+            font-size: 12px;
+            z-index: 10000;
+        }
+        .title {
+            font-weight: 600;
+        }
+        .source {
+            position: absolute;
+            width: 50%;
+            top: 6px;
+            left: 50px;
+        }
+        .bibliography {
+            position: absolute;
+            max-width: 50%;
+            bottom: 20px;
+            left: 10px;
+        }
+        
+        
+        
+    </style>
+    <link href='leaflet.css'
+        rel='stylesheet' type='text/css'/>
+    <style>
+        .leaflet-tooltip {
+            white-space: normal;
+            width: 350px;
+        }
+    </style>
+    
+    <meta http-equiv="X-UA-Compatible" content="IE=Edge">
+
+</head>
+<body>
+  <div id="map-canvas"></div>
+  <!--
+  <div class="source box">
+    <div class="title">Music on the Move: Internet Usage Rates By Region, 2018</div>
+    This map shows the percentage of people in each region estimated to have Internet access (broadband, mobile, or dial up) in June 2018. 
+    Data from <a href="https://www.internetworldstats.com/stats.htm">www.internetworldstats.com</a>.
+  </div>
+-->
+<!-- the following are polyfill for older browsers not implementing fetch/promise-->
+<script src="polyfill.min.js"></script>
+<script src="fetch.umd.js"></script>
+<!-- -->
+
+<script src="leaflet.js"></script>
+<script src="d3.v5.min.js"></script>
+<script src="d3-geo.v1.min.js"></script>
+<script src="topojson-client.min.js"></script>
+<script src="L.D3SvgOverlay.min.js"></script>
+<script>
+
+var center=[14.4346,18.2812]
+var map = L.map("map-canvas", {center: center,zoom: 2,minZoom: 2, maxZoom: 2});
+var outerradius=40
+var innerradius=30
+var fontsize=16
+var fontsize2=10
+var offset=10
+var zoom=2
+var svg;
+
+function setSizes() {
+    outerradius=40
+    innerradius=30
+    fontsize=16
+    fontsize2=10
+    offset=10
+    zoom=2
+    map.setMaxBounds([[-20000,-20000],[20000,20000]]);
+    if (map.getSize().x>1800) {
+        outerradius=60
+        innerradius=45
+        fontsize=24
+        fontsize2=16
+        offset=16
+        zoom=3
+    }
+    if (map.getSize().x<750) {
+        outerradius=25
+        innerradius=18
+        fontsize=8
+        fontsize2=7
+        offset=5
+        zoom=1
+    }
+    map.setMaxZoom(zoom);
+    map.setMinZoom(zoom);
+    map.setView(center, zoom,{animate: false});
+
+    if (svg != undefined) {
+        map.removeLayer(svg);
+    }
+    drawarcs();
+    map.setMaxBounds(map.getBounds());
+}
+
+
+function drawarcs() {
+    svg = L.d3SvgOverlay(function(sel, proj) {
+        
+        var arc = d3.arc()
+                    .outerRadius(outerradius)
+                    .innerRadius(innerradius)
+                    .endAngle(Math.PI *2)
+                    .cornerRadius(3);
+        
+        
+        d3.csv("world_internet.csv").then(function(data) {
+            
+            var points=sel.selectAll("g")
+                .data(data)
+                .enter()
+
+            
+            points.append("circle")
+                .attr("cx", function(d) {return proj.latLngToLayerPoint([d.Lat,d.Lon]).x; })
+                .attr("cy", function(d) {return proj.latLngToLayerPoint([d.Lat,d.Lon]).y; })
+                .attr("r",outerradius)
+                .attr("fill","white")
+                .attr("opacity","0.6")
+
+            points.append("g")
+                .attr("transform", function(d) {
+                    return "translate("+
+                            proj.latLngToLayerPoint([d.Lat,d.Lon]).x+
+                            ","+
+                            proj.latLngToLayerPoint([d.Lat,d.Lon]).y+
+                            ")";
+                })
+                .attr("class","donuts")
+                .append("g")
+                .attr("class","arc")
+                .append("path")
+                .attr("d",function(d) {return arc({startAngle: Math.PI * 2 * (1-(d.PctInternet / 100))})})
+                .attr("fill",function(d) {return d3.interpolateWarm(-0.15+ parseFloat(d.PctInternet) / 100)})
+                .attr('zIndex', 100)
+                
+            points.append("text")
+                .attr("x", function(d) {return proj.latLngToLayerPoint([d.Lat,d.Lon]).x; })
+                .attr("y", function(d) {return proj.latLngToLayerPoint([d.Lat,parseFloat(d.Lon)]).y-8; })
+                .text(function(d) {return d.PctInternet+'%';})
+                .attr("font-size",fontsize)
+                .attr("text-anchor","middle")
+                .attr("font-family","sans-serif")
+                .attr("fill","black");
+                
+
+            points.append("text")
+                .attr("x", function(d) {return proj.latLngToLayerPoint([d.Lat,d.Lon]).x;})
+                .attr("y", function(d) {return proj.latLngToLayerPoint([d.Lat,parseFloat(d.Lon)]).y+offset;})
+                .text(function(d) {
+                    var i=d.Region.indexOf(" ");
+                    if (i==-1) {
+                        return d.Region
+                    } else {
+                        return d.Region.substring(0,i);
+                    }
+                })
+                .attr("font-size",fontsize2)
+                .attr("text-anchor","middle")
+                .attr("font-family","sans-serif")
+                .attr("fill","black")
+            
+            points.append("text")
+                .attr("x", function(d) {return proj.latLngToLayerPoint([d.Lat,d.Lon]).x;})
+                .attr("y", function(d) {return proj.latLngToLayerPoint([d.Lat,parseFloat(d.Lon)]).y+offset*2;})
+                .text(function(d) {
+                    var i=d.Region.indexOf(" ");
+                    if (i==-1) {
+                        return ""
+                    } else {
+                        return d.Region.substring(i+1);
+                    }
+                })
+                .attr("font-size",fontsize2)
+                .attr("text-anchor","middle")
+                .attr("font-family","sans-serif")
+                .attr("fill","black")
+            
+        });
+    
+    }).addTo(map);
+}
+
+var tiles = L.tileLayer('geography-gray-web/{z}/{x}/{y}.png', {
+    tms: true, 
+    opacity: 0.5,
+    attribution: 'Data from <a href="https://www.internetworldstats.com/stats.htm">www.internetworldstats.com</a> | '+  
+           'Map tiles by E. Fosler-Lussier, made with <a href="https://www.naturalearthdata.com">Natural Earth</a>.'});
+tiles.addTo(map);
+
+setSizes();
+
+map.on('resize',setSizes);
+
+</script>

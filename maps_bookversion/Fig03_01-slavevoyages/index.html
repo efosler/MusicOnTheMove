@@ -1,0 +1,281 @@
+<!DOCTYPE html>
+<meta charset="utf-8">
+<title>Music on the Move: Trans-Atlantic Slave Voyages</title>
+<!--
+Trans-Atlantic Slave Voyages Map
+CC-BY-NC 4.0
+Eric Fosler-Lussier, The Ohio State University
+for the book, "Music on the Move" by Danielle Fosler-Lussier, U. Michigan Press, 2020.
+
+The data for this map (CC-NC) are derived from the sources provided by The Trans-Atlantic Slave Trade Database,
+www.slavevoyages.org.  We gratefully acknowledge their work, without which this map would not be possible.
+
+Map tiles were created by Eric Fosler-Lussier from Natural Earth data and are available under a CC0 license to all.
+-->
+
+<link rel="stylesheet" href="leaflet.css" />
+<link rel="stylesheet" href="motm.css"/>
+
+<body>
+  <div class="custom-popup" id="map"></div>
+  <form class="slidersettings">
+  <div class="box">
+    <div class="title">Decade</div>
+    <div id="slider"></div>
+    <input type="checkbox" id="use_cumulative"><label>&nbsp;Display cumulative totals</label>
+  </div>
+  </form>
+  <div class="source box">
+    <div class="title">Music on the Move: Trans-Atlantic Slave Trade Voyages</div>
+    This map depicts the transportation of enslaved people from Africa as listed in <a href='http://www.slavevoyages.org'>The Trans-Atlantic Slave Trade Database</a> in the decades between 1580 and 1860, grouped by regions where they arrived. White boxes and dashed lines indicate departures; black boxes and solid lines indicate arrivals. Voyages for which the major place of sale could not be imputed were removed from this visualization: the number of enslaved people who did not arrive at their destination (many dead, but some possibly escaped) is represented by the difference in the number of persons leaving Africa and those arriving at destination ports. Please consult the excellent database at <a href="http://www.slavevoyages.org">slavevoyages.org</a> for details of the research behind this map and more detailed visualizations.
+  </div>
+</body>
+
+<!-- the following are polyfill for older browsers not implementing fetch/promise-->
+<script src="polyfill.min.js"></script>
+<script src="fetch.umd.js"></script>
+<!-- -->
+<script src="d3.v5.min.js"></script>
+<script src="leaflet.js"></script>
+<script src="spatialsankey.js"></script>
+<script src="jquery-1.9.1.min.js"></script>
+<script src="d3-simple-slider.min.js"></script>
+
+<script type="text/javascript">
+
+// Set leaflet map
+var map = new L.map('map', {
+          center: new L.LatLng(14.0939,-23.3789),
+          maxBounds: [[-90,-150],[90,120]],
+          zoom: 3,
+          minZoom: 2,
+          maxZoom: 4,
+          layers: []
+        });
+
+L.tileLayer('geography-gray-web/{z}/{x}/{y}.png', {tms: true, attribution: 'Data by <a href="www.slavevoyages.org">The Trans-Atlantic Slave Trade Database</a>, Map tiles by E. Fosler-Lussier, made with <a href="https://www.naturalearthdata.com">Natural Earth</a>.'}).addTo(map);
+
+
+// Initialize the SVG layer
+//map._initPathRoot()
+var svgLayer=L.svg().addTo(map);
+
+// Setup svg element to work with
+var svg = d3.select("#map").select("svg"),
+    linklayer = svg.append("g"),
+    nodelayer = svg.append("g");
+
+// save textMarkers for modification
+var textMarker=[];
+
+
+var spatialsankey;
+var dfields;
+var dfieldcounter=0;
+var options = {'use_arcs': false, 'flip': false, maxwidth:30};
+var linkoptions=options;
+var standard_links;
+var cumulative_links;
+
+var slider = d3
+    .sliderHorizontal()
+    .min(1510)
+    .max(1860)
+    .step(10)
+    .ticks(5)
+    .tickFormat(d3.format('4d'))
+    .width(250)
+    .displayValue(true)
+    .on('onchange', function(val){
+	    onSlider(val);
+	});
+
+d3.select('#slider')
+    .append('svg')
+    .attr('width', 300)
+    .attr('height', 80)
+    .append('g')
+    .attr('transform', 'translate(30,30)')
+    .call(slider);
+
+
+// Load data asynchronosuly
+//d3.json("voyage_nodes.geojson", function(nodes) {
+//  d3.csv("voyage_transvers.csv", function(links) {
+d3.json("voyage_nodes.geojson").then(function(nodes) {
+  d3.csv("voyage_transfers.csv").then(function(links) {
+
+    standard_links=links;
+    // Setup spatialsankey object
+    spatialsankey = d3.spatialsankey()
+                            .lmap(map)
+                            .nodes(nodes.features)
+                            .links(standard_links);
+
+    var nodelinks = spatialsankey.links().filter(function(link){
+        return link.source == "Africa" || link.target == "Africa" || link.source == "Way1" || link.source == "Way2";
+    });  
+
+    
+    dfields = spatialsankey.datafields().sort();
+    cumulative_links=[]
+    links.forEach(function (l) {
+        var cl={source:l.source, target:l.target, waypoint:l.waypoint, display:l.display};
+	    var total=0;
+	    dfields.forEach(function(f) { 
+		    if (l[f].length>0) {
+			total+=parseFloat(l[f]);
+		    }
+		    cl[f]=total;
+			});
+	    cumulative_links.push(cl)
+	});
+	    
+	// setup with cumulative links
+
+    linkoptions.flowfield=dfields[dfieldcounter];
+
+    
+    var endnodes= spatialsankey.nodes().filter(function(node) {
+	  return node.properties.display!="none";
+	});
+
+    endnodes.forEach(function(node) {
+        var html="";
+        var iconSize;
+        if (node.properties.display == "full") {
+            html=node.id+'<br/>'+'-';
+            iconSize=[100,30];
+        } else {
+            html="-";
+            iconSize=[50,15];
+        }
+       
+    
+	    var newicon=L.divIcon({className: 'placeIcon arrivalIcon',
+				   iconSize: iconSize,
+				   html: html });
+	    var marker=L.marker([node.properties.LAT,node.properties.LON],{icon: newicon}).addTo(map);
+
+	    textMarker[node.id] = { node: node,
+				    value: "-",
+                    icon: newicon,
+				    marker: marker };
+	});
+
+    
+    
+    nodelinks.forEach(function(link) {
+        var node=link.target;
+        var linktype="arrival";
+     
+	    if (link.display == "source") {
+            node=link.source;
+            linktype="departure";
+        }
+        link.linktype=linktype;
+        textMarker[node].linktype=linktype;
+	    setMarkerValue(node,link[dfields[dfieldcounter]]);
+	});
+
+    var beziers = linklayer.selectAll("path").data(nodelinks);
+    link = spatialsankey.link(linkoptions);
+    beziers.enter()
+        .append("path")
+        .attr("d", link)
+        .attr('id', function(d){return d.id})
+        .attr("class", "voyagepath")
+        .style("stroke-dasharray",function(d) {if (d.target == "Africa"){return "10 10";} else {return "1";}})
+        .style("stroke-width", spatialsankey.link(linkoptions).width());
+    
+    // Remove old links
+    beziers.exit().remove();
+
+
+    // Adopt size of drawn objects after leaflet zoom reset
+    var zoomend = function(){
+        linklayer.selectAll("path").attr("d", spatialsankey.link(linkoptions));
+    };
+ 
+    map.on("zoomend", zoomend);
+  });
+});
+
+var setMarkerValue=function(id,value) {
+    textMarker[id].value=value;
+    var newstring="";
+    var iconSize;
+    if (textMarker[id].node.properties.display=="full") {
+        newstring=id+"<br/>"+value;
+        iconSize=[100,30];
+    } else {
+        newstring=value;
+        iconSize=[50,15];
+    }
+    var className = textMarker[id].linktype+"Icon";
+     textMarker[id].icon=L.divIcon({className: 'placeIcon '+className,
+				   iconSize: iconSize,
+				   html: newstring});
+    textMarker[id].marker.setIcon(textMarker[id].icon);
+}
+
+var onSlider=function(year) {
+    var nodelinks = spatialsankey.links().filter(function(link){
+        return link.source == "Africa" || link.target == "Africa" || link.source == "Way1" || link.source == "Way2";
+    });  
+    nodelinks.forEach(function(link) {
+	    var node=link.target;
+	    if (link.display == "source") {
+		node=link.source;
+	    }
+	    setMarkerValue(node,link[year]);
+	});
+    linkoptions.flowfield=year;
+    linklayer.selectAll("path").style("stroke-width",spatialsankey.link(linkoptions).width());
+
+}
+
+d3.select("#use_cumulative").on("change", function() {
+	if (d3.select("#use_cumulative").property("checked")) {
+        spatialsankey.links(cumulative_links);
+    } else {
+        spatialsankey.links(standard_links);
+    }
+    
+    var nodelinks = spatialsankey.links().filter(function(link){
+        return link.source == "Africa" || link.target == "Africa" || link.source == "Way1" || link.source == "Way2";
+    }); 
+    // update map links
+    var beziers = linklayer.selectAll("path").data(nodelinks);
+    link = spatialsankey.link(linkoptions);
+    beziers.enter()
+        .append("path")
+        .attr("d", link)
+        .attr('id', function(d){return d.id})
+        .attr("class","voyagepath")
+        .style("stroke-dasharray",function(d) {if (d.target == "Africa"){return "10 10";} else {return "1";}})
+        .style("stroke-width", spatialsankey.link(linkoptions).width());
+    
+    // Remove old links
+    beziers.exit().remove();
+
+    onSlider(linkoptions.flowfield)
+}); 
+
+var legend = L.control({position: 'bottomright'});
+
+legend.onAdd = function (map) {
+
+    var div = L.DomUtil.create('div', 'info legend box');
+
+    div.innerHTML += "<span class='placeIcon departureIcon'>1000</span>&nbsp;Number of enslaved people leaving region<br/>"
+    div.innerHTML += "<span class='placeIcon arrivalIcon'>1000</span>&nbsp;Number of enslaved people arriving<br/>"
+
+return div;
+};
+
+legend.addTo(map);
+map.fitBounds([[55.478,46.933],[-35.889,-93.691]])
+
+
+</script>
